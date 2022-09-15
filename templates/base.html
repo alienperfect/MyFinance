@@ -7,6 +7,46 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <div class="container">
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ user.email }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">Account</a>
+                        <a class="dropdown-item" href="#">Logout</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <a class="nav-link" href="#">Login</a>
+                    <a class="nav-link" href="#">Registration</a>
+                {% endif %}
+            </div>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'main' %}">Main</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Accounting
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="#">Accounting</a>
+                <a class="dropdown-item" href="#">Categories</a>
+                </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Statistics</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
     {% block content %}{% endblock %}
 </body>
 </html>
