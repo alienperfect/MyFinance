@@ -9,3 +9,7 @@ class User(AbstractUser):
     EMAIL_FIELD = "username"
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=256, unique=True)
