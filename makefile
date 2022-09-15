@@ -15,7 +15,7 @@ clean:
 	py manage.py reset_db
 
 run-docker:
-  	docker run -p 8000:8000 my_finance:latest
+	docker run -p 8000:8000 my_finance:latest
 
 build-docker:
-  	docker build -t my_finance .
+	docker build -t my_finance .
