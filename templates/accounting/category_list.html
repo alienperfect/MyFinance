@@ -3,17 +3,12 @@
 {% block title %}Categories{% endblock %}
 
 {% block content %}
-    {% load bootstrap4 %}
-    {% bootstrap_css %}
-    {% bootstrap_javascript jquery='full' %}
-
     <div class="container">
         <h4>Categories</h4>
         <div class="list-group">
             {% for category in category_list %}
-                <a class="list-group-item list-group-item-action" href="{{ category.get_absolute_url }}" >{{ category.name }}</a>
+                <a class="list-group-item list-group-item-action" href="{% url 'accounting:category-detail' pk=category.pk %}" >{{ category.name }}</a>
             {% endfor %}
         </div>
     </div>
-
 {% endblock %}

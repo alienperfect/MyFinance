@@ -1,4 +1,5 @@
 from django.urls import path
+
 from accounting.views import CategoryCreateView, CategoryListView, CategoryDetailView
 
 app_name = 'accounting'

@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
+
 from accounting.models import Category
 from accounting.forms import CategoryCreateForm
 

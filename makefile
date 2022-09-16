@@ -14,8 +14,12 @@ mm:
 clean:
 	py manage.py reset_db
 
-run-docker:
-	docker run -p 8000:8000 my_finance:latest
+docker-run:
+	docker-compose up
 
-build-docker:
-	docker build -t my_finance .
+docker-build:
+	docker-compose build
+
+docker-shell:
+	docker exec -it finance_web python manage.py shell_plus
+
