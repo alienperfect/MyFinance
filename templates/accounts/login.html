@@ -3,9 +3,17 @@
 {% block title %}Log In{% endblock %}
 
 {% block content %}
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+
 	<form method="post">
         {% csrf_token %}
-        {{ form }}
-        <button type="submit">Submit</button>
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+            Submit
+            </button>
+        {% endbuttons %}
     </form>
 {% endblock %}
