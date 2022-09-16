@@ -1,5 +1,5 @@
 from django import forms
-from accounts.models import Category
+from accounting.models import Category
 
 
 class CategoryCreateForm(forms.ModelForm):
