@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h4>Categories</h4>
+        <div class="list-group">
+            {% for category in category_list %}
+                <a class="list-group-item list-group-item-action" href="{% url 'accounting:category-detail' pk=category.pk %}" >{{ category.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
