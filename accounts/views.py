@@ -16,7 +16,7 @@ class AccountUpdateView(UpdateView):
     template_name = 'accounts/account_update.html'
     model = Account
     form_class = AccountUpdateForm
-    success_url = reverse_lazy('accounts:account-update')
+    success_url = reverse_lazy('accounts:account-detail')
 
     def get_object(self, queryset=None):
         return Account.objects.get(pk=self.request.user.pk)
@@ -31,10 +31,8 @@ class AccountUpdateView(UpdateView):
 
     def form_valid(self, form):
         formset = UserFormSet(self.request.POST, self.request.FILES)
-        print(self.request.FILES)
         if formset.is_valid():
             formset.save()
-        form.instance.total_earned = form.instance.calculate_total_earned
         return super().form_valid(form)
 
 

@@ -21,15 +21,13 @@ class Account(models.Model):
     monthly_salary = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     hourly_rate = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     hours_worked = models.PositiveIntegerField(blank=True, null=True)
-    total_earned = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     @cached_property
-    def calculate_total_earned(self):
+    def calculate_total(self):
+        total = 0
         if self.hourly_rate and self.hours_worked:
-            self.total_earned = self.hourly_rate * self.hours_worked
+            total = self.hourly_rate * self.hours_worked
         elif self.monthly_salary:
-            self.total_earned = self.monthly_salary
-        else:
-            self.total_earned = 0
-        return self.total_earned
+            total = self.monthly_salary
+        return total

@@ -9,12 +9,13 @@
     <div class="container">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {% bootstrap_form form %}
 
             {{ formset.management_form }}
             {% for form in formset %}
                 {% bootstrap_form form %}
             {% endfor %}
+
+            {% bootstrap_form form %}  
             {% buttons %}
                 <button type="submit" class="btn btn-primary">
                 Submit
