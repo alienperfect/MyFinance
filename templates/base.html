@@ -37,7 +37,7 @@
                 {{ user.email }}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="#">Account</a>
+                <a class="dropdown-item" href="{% url 'accounts:account-detail' %}">Account</a>
                 <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
               </div>
             </li>

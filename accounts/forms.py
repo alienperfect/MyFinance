@@ -1,5 +1,7 @@
 from django import forms
-from accounts.models import User
+from django.forms import modelformset_factory
+
+from accounts.models import Account, User
 
 
 class AccountUpdateForm(forms.ModelForm):
@@ -21,20 +23,13 @@ class AccountUpdateForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'placeholder': '0', 'numval': ''})
         )
 
-    total_earned = forms.DecimalField(
-        required=False,
-        help_text='Equals to monthly salary or hourly rate * hours',
-        widget=forms.TextInput(attrs={'value': 0, 'class': 'form-control-plaintext', 'readonly': '', 'numval': ''})
-        )
-
     class Meta:
-        model = User
+        model = Account
         fields = [
-            'username',
-            'avatar',
-            'job_position',
             'monthly_salary',
             'hourly_rate',
             'hours_worked',
-            'total_earned',
         ]
+
+
+UserFormSet = modelformset_factory(User, fields=('username', 'avatar', 'job_position'), extra=0)

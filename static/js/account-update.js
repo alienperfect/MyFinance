@@ -11,6 +11,7 @@ if ( $( "#id_monthly_salary" ).val() != '' ){
     $( "#id_hourly_rate" ).prop( "disabled", true );
 }
 
+
 $(document).ready(function(){
     $( "#id_hourly_rate" ).on("input", function(){
         if ( $(this).val() != '' ){

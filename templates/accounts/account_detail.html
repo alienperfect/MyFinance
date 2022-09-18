@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <ul class="list-group">
+            <li class="list-group-item">Username: {{ request.user.username }}</li>
+            <li class="list-group-item">Avatar: <img src="{{ request.user.avatar.url }}" width="250"></li>
+            <li class="list-group-item">Job position: {{ request.user.job_position }}</li>
+            <li class="list-group-item">Monthly salary: {{ account.monthly_salary }}</li>
+            <li class="list-group-item">Hourly rate: {{ account.hourly_rate }}</li>
+            <li class="list-group-item">Hours worked: {{ account.hours_worked }}</li>
+            <li class="list-group-item">Total earned: {{ account.total_earned }}</li>
+        </ul>
+    </div>
+{% endblock %}

@@ -1,9 +1,10 @@
 from django.contrib.auth import views
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, DetailView
 from django.urls import reverse_lazy
 
-from accounts.models import User
-from accounts.forms import AccountUpdateForm
+from accounts.models import Account
+from accounts.forms import AccountUpdateForm, UserFormSet
+
 
 class LoginView(views.LoginView):
     template_name = 'accounts/login.html'
@@ -13,18 +14,33 @@ class LoginView(views.LoginView):
 
 class AccountUpdateView(UpdateView):
     template_name = 'accounts/account_update.html'
-    model = User
+    model = Account
     form_class = AccountUpdateForm
     success_url = reverse_lazy('accounts:account-update')
 
     def get_object(self, queryset=None):
-        return User.objects.get(pk=self.request.user.pk)
+        return Account.objects.get(pk=self.request.user.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request == 'POST':
+            context['formset'] = UserFormSet(self.request.POST)
+        else:
+            context['formset'] = UserFormSet()
+        return context
 
     def form_valid(self, form):
-        if form.instance.hourly_rate and form.instance.hours_worked:
-            form.instance.total_earned = form.instance.hourly_rate * form.instance.hours_worked
-        elif form.instance.monthly_salary:
-            form.instance.total_earned = form.instance.monthly_salary
-        else:
-            form.instance.total_earned = 0
+        formset = UserFormSet(self.request.POST, self.request.FILES)
+        print(self.request.FILES)
+        if formset.is_valid():
+            formset.save()
+        form.instance.total_earned = form.instance.calculate_total_earned
         return super().form_valid(form)
+
+
+class AccountDetailView(DetailView):
+    template_name = 'accounts/account_detail.html'
+    model = Account
+
+    def get_object(self, queryset=None):
+        return Account.objects.get(pk=self.request.user.pk)
