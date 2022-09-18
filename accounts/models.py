@@ -17,11 +17,17 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
 
+class AccountManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related('user')
+
+
 class Account(models.Model):
     monthly_salary = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     hourly_rate = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     hours_worked = models.PositiveIntegerField(blank=True, null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    objects = AccountManager()
 
     @cached_property
     def calculate_total(self):

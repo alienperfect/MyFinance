@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import modelformset_factory
+from django.forms import modelform_factory
 
 from accounts.models import Account, User
 
@@ -32,4 +32,4 @@ class AccountUpdateForm(forms.ModelForm):
         ]
 
 
-UserFormSet = modelformset_factory(User, fields=('username', 'avatar', 'job_position'), extra=0)
+UserForm = modelform_factory(User, fields=('username', 'avatar', 'job_position'))
