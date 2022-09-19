@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Accounting{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'accounting:unit-create' %}">new</a>
+        </div>
+        <div class="list-group">
+            {% for unit in accountingunit_list %}
+                <a class="list-group-item list-group-item-action" href="{% url 'accounting:unit-detail' pk=unit.pk %}">{{ unit.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

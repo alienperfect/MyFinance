@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}New category{% endblock %}
+{% block title %}New accounting unit{% endblock %}
 
 {% block content %}
     {% load bootstrap4 %}
+    {% load static %}
 
     <div class="container">
         <form method="post">
@@ -16,4 +17,9 @@
             {% endbuttons %}
         </form>
     </div>
+
+    <link href="{% static 'select2-4.1.0-rc.0/css/select2.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'select2-4.1.0-rc.0/js/select2.min.js' %}"></script>
+    <script src="{% static 'js/validate-numeric.js' %}"></script>
+    <script src="{% static 'js/add-related.js' %}"></script>
 {% endblock %}

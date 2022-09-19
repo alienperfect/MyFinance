@@ -3,5 +3,13 @@
 {% block title %}{{ category.name }}{% endblock %}
 
 {% block content %}
-    {{ category.name }}
+    <div class="container">
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'accounting:category-update' pk=category.pk %}">edit</a>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">{{ category.name }}</li>
+            <li class="list-group-item">{{ category.acccounting }}</li>
+        </ul>
+    </div>
 {% endblock %}
