@@ -8,11 +8,11 @@
             <a href="{% url 'accounts:account-update' %}">edit</a>
         </div>
         <ul class="list-group">
-            <li class="list-group-item">Username: {{ request.user.username }}</li>
-            {% if request.user.avatar %}
-                <li class="list-group-item">Avatar: <img src="{{ request.user.avatar.url }}" width="250"></li>
+            <li class="list-group-item">Username: {{ account.user.username }}</li>
+            {% if account.user.avatar %}
+                <li class="list-group-item">Avatar: <img src="{{ account.user.avatar.url }}" width="250"></li>
             {% endif %}
-            <li class="list-group-item">Job position: {{ request.user.job_position }}</li>
+            <li class="list-group-item">Job position: {{ account.user.job_position }}</li>
             <li class="list-group-item">Monthly salary: {{ account.monthly_salary }}</li>
             <li class="list-group-item">Hourly rate: {{ account.hourly_rate }}</li>
             <li class="list-group-item">Hours worked: {{ account.hours_worked }}</li>
