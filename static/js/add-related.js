@@ -1,7 +1,7 @@
 $(document).ready(function(){
     $('#id_category').select2();
 
-    var add_button = '<img id="addlink" data-toggle="modal" data-target="#exampleModalCenter" src="http://127.0.0.1:8000/static/img/icon-addlink.svg">';
+    var add_button = '<img id="addlink" data-toggle="modal" data-target="#exampleModalCenter" style="padding-left: 0.15em; padding-bottom: 0.125em; width: 1.15em" src="http://127.0.0.1:8000/static/img/icon-addlink.svg">';
     var label = $('label[for="id_category"]').closest("label");
     var input = $("#name-input");
     var submit = $("#name-submit");
