@@ -1,33 +1,42 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponse
 
 from accounting.models import AccountingUnit, Category
 from accounting.forms import AccountingUnitForm, CategoryCreateForm, CategoryUpdateForm
 
 
-def endpoint(request):
-    if request.method == 'POST':
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            name = request.POST.get('name', '')
-            pk = request.POST.get('pk', '')
+class RelatedCategoryMixin:
+    def __init__(self):
+        self.categories = []
 
+    def post(self, request, *args, **kwargs):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            name = request.POST.get('name')
+            global categories
             category = Category(name=name)
             category.save()
-            accounting_unit = AccountingUnit.objects.get(pk=pk)
-            category.accountingunit_set.add(accounting_unit)
-            return HttpResponse(category)
-    return HttpResponseNotFound()
+            self.categories.append(category)
+            return HttpResponse()
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.save()
+        if self.categories:
+            for category in self.categories:
+                form.instance.category.add(category)
+            form.save()
+        return HttpResponseRedirect(self.success_url)
 
 
-class AccountingUnitCreateView(CreateView):
+class AccountingUnitCreateView(RelatedCategoryMixin, CreateView):
     template_name = 'accounting/unit_create.html'
     model = AccountingUnit
     form_class = AccountingUnitForm
     success_url = reverse_lazy('accounting:unit-list')
 
 
-class AccountingUnitUpdateView(UpdateView):
+class AccountingUnitUpdateView(RelatedCategoryMixin, UpdateView):
     template_name = 'accounting/unit_update.html'
     model = AccountingUnit
     form_class = AccountingUnitForm

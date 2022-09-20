@@ -19,32 +19,31 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="id_category_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">New category</h5>
+                    <h5 class="modal-title" id="id_category_modal_long_title">New category</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <label for="name-input">Name</label>
-                    <input type="text" id="name-input" class="form-control">
+                    <label for="id_category_name_input">Name</label>
+                    <input type="text" id="id_category_name_input" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" id="name-submit" class="btn btn-primary">Submit</button>
+                    <button type="button" id="id_category_name_submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
     </div>
 
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <meta name="pk" content="{{ accountingunit.pk }}">
 
     <link href="{% static 'select2-4.1.0-rc.0/css/select2.min.css' %}" rel="stylesheet"/>
     <script src="{% static 'select2-4.1.0-rc.0/js/select2.min.js' %}"></script>
-    <script src="{% static 'js/add-related.js' %}"></script>
+    <script src="{% static 'js/add-related-category.js' %}"></script>
     <script src="{% static 'js/validate-numeric.js' %}"></script>
 {% endblock %}

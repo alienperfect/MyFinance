@@ -9,7 +9,14 @@
         </div>
         <div class="list-group">
             {% for unit in accountingunit_list %}
-                <a class="list-group-item list-group-item-action" href="{% url 'accounting:unit-detail' pk=unit.pk %}">{{ unit.name }}</a>
+                <div class="container">
+                    <a class="list-group-item list-group-item-action" href="{% url 'accounting:unit-detail' pk=unit.pk %}">
+                        {{ unit.name }}
+                        <span class="align-top">
+                            - {{ unit.created }}
+                        </span>
+                    </a>
+                </div>
             {% endfor %}
         </div>
     </div>
