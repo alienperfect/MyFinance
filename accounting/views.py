@@ -13,7 +13,6 @@ class RelatedCategoryMixin:
     def post(self, request, *args, **kwargs):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             name = request.POST.get('name')
-            global categories
             category = Category(name=name)
             category.save()
             self.categories.append(category)
