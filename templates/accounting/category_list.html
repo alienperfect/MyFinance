@@ -4,7 +4,9 @@
 
 {% block content %}
     <div class="container">
-        <h4>Categories</h4>
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'accounting:category-create' %}">new</a>
+        </div>
         <div class="list-group">
             {% for category in category_list %}
                 <a class="list-group-item list-group-item-action" href="{% url 'accounting:category-detail' pk=category.pk %}" >{{ category.name }}</a>

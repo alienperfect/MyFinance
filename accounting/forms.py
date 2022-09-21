@@ -1,27 +1,17 @@
 from django import forms
 from accounting.models import AccountingUnit, Category
-from accounting.widgets import DatePickerInput
 
 
 class AccountingUnitForm(forms.ModelForm):
     price = forms.DecimalField(widget=forms.TextInput(attrs={'placeholder': '0.00', 'numval': ''}))
+    purchase_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
 
     class Meta:
         model = AccountingUnit
-        exclude = ['created']
-
-        widgets = {
-            'purchase_date': DatePickerInput(),
-        }
+        exclude = ['created', 'modified']
 
 
-class CategoryCreateForm(forms.ModelForm):
-    class Meta:
-        model = Category
-        fields = ['name']
-
-
-class CategoryUpdateForm(forms.ModelForm):
+class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['name']

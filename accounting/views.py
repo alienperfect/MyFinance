@@ -1,31 +1,34 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import JsonResponse
 
 from accounting.models import AccountingUnit, Category
-from accounting.forms import AccountingUnitForm, CategoryCreateForm, CategoryUpdateForm
+from accounting.forms import AccountingUnitForm, CategoryForm
 
 
 class RelatedCategoryMixin:
-    def __init__(self):
-        self.categories = []
+    """Mixin for creating categories on accounting page."""
+    categories = []
 
     def post(self, request, *args, **kwargs):
+        # Handle AJAX call
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             name = request.POST.get('name')
             category = Category(name=name)
             category.save()
             self.categories.append(category)
-            return HttpResponse()
+            return JsonResponse({'id': category.id})
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.save()
         if self.categories:
-            for category in self.categories:
-                form.instance.category.add(category)
-            form.save()
-        return HttpResponseRedirect(self.success_url)
+            # Differentiate between Create and Update.
+            # When self.object is None -- it's Createview.
+            # Save it before adding relations.
+            if not self.object:
+                form.save()
+            form.instance.category.add(*self.categories)
+        return super().form_valid(form)
 
 
 class AccountingUnitCreateView(RelatedCategoryMixin, CreateView):
@@ -55,14 +58,14 @@ class AccountingUnitDetailView(DetailView):
 class CategoryCreateView(CreateView):
     template_name = 'accounting/category_create.html'
     model = Category
-    form_class = CategoryCreateForm
+    form_class = CategoryForm
     success_url = reverse_lazy('accounting:category-list')
 
 
 class CategoryUpdateView(UpdateView):
     template_name = 'accounting/category_update.html'
     model = Category
-    form_class = CategoryUpdateForm
+    form_class = CategoryForm
     success_url = reverse_lazy('accounting:category-list')
 
 

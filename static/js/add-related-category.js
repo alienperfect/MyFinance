@@ -28,12 +28,13 @@ $(document).ready(function(){
                 url: url,
                 data: {"name": category_input.val()},
                 headers: {'X-CSRFTOKEN': csrf_token}
-                }).done(function(){
+                }).done(function(response){
                     $('#id_category_modal').modal('hide');
+                    console.log(response['id'])
 
-                    var last_child = parseInt($('select[id="id_category"] option:last-child').val());
-                    var option = $('<option/>').attr({ 'value': last_child+1, 'selected': '' }).text(category_input.val());
-                    $('select[id="id_category"]').append(option);
+                    // Append option to select
+                    var newOption = new Option(category_input.val(), response['id'], true, true);
+                    $('#id_category').append(newOption).trigger('change');
 
                     category_input.removeClass('is-invalid');
                     category_input.val('');
@@ -43,7 +44,6 @@ $(document).ready(function(){
             invalid_msg = '<small id="id_category_invalid" class="text-danger">Category with this name already exists.</small>';
             
             if ($('#id_category_invalid').length){
-                console.log('it is')
                 $('id_category_invalid').html(invalid_msg);
             } else {
                 $('.modal-body').append(invalid_msg);
