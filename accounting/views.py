@@ -4,6 +4,7 @@ from django.http import JsonResponse
 
 from accounting.models import AccountingUnit, Category
 from accounting.forms import AccountingUnitForm, CategoryForm
+from accounting.utils import is_ajax
 
 
 class RelatedCategoryMixin:
@@ -11,8 +12,7 @@ class RelatedCategoryMixin:
     categories = []
 
     def post(self, request, *args, **kwargs):
-        # Handle AJAX call
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if is_ajax(request):
             category = Category.objects.create(name=request.POST.get('name'))
             self.categories.append(category)
             return JsonResponse({'id': category.id})
@@ -47,11 +47,6 @@ class AccountingUnitListView(ListView):
 class AccountingUnitDetailView(DetailView):
     template_name = 'accounting/unit_detail.html'
     model = AccountingUnit
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.filter(accounting_unit__pk=self.get_object().pk)
-        return context
 
 
 class CategoryCreateView(CreateView):

@@ -30,13 +30,25 @@
                     {% for unit in accountingunit_list %}
                     <tr>
                         <td>
-                            <a href="{% url 'accounting:unit-detail' pk=unit.pk %}">
+                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
                                 {{ unit.name }}
                             </a>
                         </td>
-                        <td>${{ unit.price }}</td>
-                        <td>{{ unit.purchase_date }}</td>
-                        <td>{{ unit.created }}</td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
+                                ${{ unit.price }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
+                                {{ unit.purchase_date }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
+                                {{ unit.created }}
+                            </a>
+                        </td>
                         <td>
                             {% for category in unit.categories.all %}
                                 <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
