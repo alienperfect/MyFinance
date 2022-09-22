@@ -20,9 +20,8 @@ class RelatedCategoryMixin:
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        if self.categories:
-            if not self.object:
-                self.object.categories.add(*self.categories)
+        if not self.object and self.categories:
+            self.object.categories.add(*self.categories)
         return response
 
 
