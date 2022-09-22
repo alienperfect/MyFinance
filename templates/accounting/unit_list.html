@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Accounting{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <!-- Table -->
+        <div class="py-3">
+            <table class="table table-bordered table-hover">
+                <div class="row">
+                    <h4 style="padding-left: 0.65em; margin-top: 7px;">Accounting units</h4>
+                    <div class="col my-auto" style="padding-left: 0.5em;">
+                        <a href="{% url 'accounting:unit-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
+                            +
+                        </a>
+                    </div>
+                </div>
+                </div>
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Date of purchase</th>
+                        <th scope="col">Date added</th>
+                        <th scope="col">Categories</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for unit in accountingunit_list %}
+                    <tr>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
+                                {{ unit.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
+                                ${{ unit.price }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
+                                {{ unit.purchase_date }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
+                                {{ unit.created }}
+                            </a>
+                        </td>
+                        <td>
+                            {% for category in unit.categories.all %}
+                                <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
+                                    <span class="badge badge-info">{{ category }}</span>
+                                </a>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- End table -->
+
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{{ unit.name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'accounting:unit-update' pk=accountingunit.pk %}">edit</a>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">{{ accountingunit.name }}</li>
+                <li class="list-group-item">
+                    {% for category in accountingunit.categories.all %}
+                        <a href="{% url 'accounting:category-detail' pk=category.pk %}">{{ category }}</a>
+                    {% endfor %}
+                </li>
+            <li class="list-group-item">Price: {{ accountingunit.price }}</li>
+            <li class="list-group-item">Purchased: {{ accountingunit.purchase_date }}</li>
+            <li class="list-group-item">Created: {{ accountingunit.created }}</li>
+        </ul>
+    </div>
+{% endblock %}

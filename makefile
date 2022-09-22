@@ -23,3 +23,6 @@ docker-build:
 docker-shell:
 	docker exec -it finance_web python manage.py shell_plus
 
+docker-mm:
+	docker exec -it finance_web python manage.py makemigrations
+	docker exec -it finance_web python manage.py migrate

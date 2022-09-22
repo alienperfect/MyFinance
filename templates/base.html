@@ -8,10 +8,13 @@
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap-4.0.0-dist/css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery-3.6.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap-4.0.0-dist/js/bootstrap.min.js' %}"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <div class="expand navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link" href="{% url 'main' %}">Main</a>
@@ -21,7 +24,7 @@
                 Accounting
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="#">Accounting</a>
+                <a class="dropdown-item" href="{% url 'accounting:unit-list' %}">Accounting</a>
                 <a class="dropdown-item" href="{% url 'accounting:category-list' %}">Categories</a>
                 </div>
             </li>
@@ -50,8 +53,6 @@
       </nav>
 
     {% block content %}{% endblock %}
-    <script src="{% static 'js/jquery-3.6.1.min.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'bootstrap-4.0.0-dist/js/bootstrap.min.js' %}"></script>
+    
 </body>
 </html>
