@@ -13,22 +13,17 @@ class RelatedCategoryMixin:
     def post(self, request, *args, **kwargs):
         # Handle AJAX call
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            name = request.POST.get('name')
-            category = Category(name=name)
-            category.save()
+            category = Category.objects.create(name=request.POST.get('name'))
             self.categories.append(category)
             return JsonResponse({'id': category.id})
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
+        response = super().form_valid(form)
         if self.categories:
-            # Differentiate between Create and Update.
-            # When self.object is None -- it's Createview.
-            # Save it before adding relations.
             if not self.object:
-                form.save()
-            form.instance.category.add(*self.categories)
-        return super().form_valid(form)
+                self.object.categories.add(*self.categories)
+        return response
 
 
 class AccountingUnitCreateView(RelatedCategoryMixin, CreateView):
@@ -53,6 +48,11 @@ class AccountingUnitListView(ListView):
 class AccountingUnitDetailView(DetailView):
     template_name = 'accounting/unit_detail.html'
     model = AccountingUnit
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.filter(accounting_unit__pk=self.get_object().pk)
+        return context
 
 
 class CategoryCreateView(CreateView):

@@ -9,7 +9,13 @@
         </div>
         <ul class="list-group">
             <li class="list-group-item">{{ accountingunit.name }}</li>
-            <li class="list-group-item">{{ accountingunit.category.all }}</li>
+            {% if categories %}
+                <li class="list-group-item">
+                    {% for category in categories %}
+                        <a href="{% url 'accounting:category-detail' pk=category.pk %}">{{ category }}</a>
+                    {% endfor %}
+                </li>
+            {% endif %}
             <li class="list-group-item">Price: {{ accountingunit.price }}</li>
             <li class="list-group-item">Purchased: {{ accountingunit.purchase_date }}</li>
             <li class="list-group-item">Created: {{ accountingunit.created }}</li>
