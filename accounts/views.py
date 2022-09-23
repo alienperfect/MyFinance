@@ -1,20 +1,40 @@
 from django.contrib.auth import views
-from django.views.generic import UpdateView, DetailView
+from django.views.generic import CreateView, UpdateView, DetailView
 from django.urls import reverse_lazy
+from django.contrib.auth import login, logout
+from django.http import HttpResponseRedirect
 
-from accounts.models import Account
-from accounts.forms import AccountUpdateForm, UserForm
+from accounts.models import Account, User
+from accounts.forms import RegistrationForm, AccountUpdateForm, UserForm
+
+
+class UserRelatedMixin:
+    def get_object(self, queryset=None):
+        return self.model.objects.get(pk=self.request.user.pk)
+
+
+class RegistrationView(CreateView):
+    template_name = 'accounts/registration.html'
+    model = User
+    form_class = RegistrationForm
+    success_url = reverse_lazy('accounts:account-detail')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        Account.objects.create(user=self.object)
+        login(self.request, self.object)
+        return response
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse_lazy('main'))
 
 
 class LoginView(views.LoginView):
     template_name = 'accounts/login.html'
     next_page = reverse_lazy('main')
     redirect_authenticated_user = True
-
-
-class UserRelatedMixin:
-    def get_object(self, queryset=None):
-        return self.model.objects.get(pk=self.request.user.pk)
 
 
 class AccountUpdateView(UserRelatedMixin, UpdateView):
