@@ -1,4 +1,4 @@
-from django.contrib.auth import views
+from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView, UpdateView, DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth import login, logout
@@ -26,12 +26,11 @@ class RegistrationView(CreateView):
         return response
 
 
-def logout_view(request):
-    logout(request)
-    return HttpResponseRedirect(reverse_lazy('main'))
+class LogoutView(LogoutView):
+    next_page = reverse_lazy('main')
 
 
-class LoginView(views.LoginView):
+class LoginView(LoginView):
     template_name = 'accounts/login.html'
     next_page = reverse_lazy('main')
     redirect_authenticated_user = True

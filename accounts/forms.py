@@ -5,6 +5,17 @@ from accounts.models import Account, User
 
 
 class RegistrationForm(UserCreationForm):
+    password1 = forms.CharField(
+        label=("Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+    password2 = forms.CharField(
+        label=("Password confirmation"),
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        strip=False,
+    )
+
     class Meta:
         model = User
         fields = ['email', 'username']
