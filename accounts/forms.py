@@ -1,7 +1,24 @@
 from django import forms
-from django.forms import modelform_factory
+from django.contrib.auth.forms import UserCreationForm
 
 from accounts.models import Account, User
+
+
+class RegistrationForm(UserCreationForm):
+    password1 = forms.CharField(
+        label=("Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+    password2 = forms.CharField(
+        label=("Password confirmation"),
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        strip=False,
+    )
+
+    class Meta:
+        model = User
+        fields = ['email', 'username']
 
 
 class AccountUpdateForm(forms.ModelForm):
@@ -31,5 +48,4 @@ class AccountUpdateForm(forms.ModelForm):
             'hours_worked',
         ]
 
-
-UserForm = modelform_factory(User, fields=('username', 'avatar', 'job_position'))
+UserForm = forms.modelform_factory(User, fields=('username', 'avatar', 'job_position'))

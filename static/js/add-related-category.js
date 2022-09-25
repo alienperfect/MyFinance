@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    console.log("LOADED")
     // Initialize select2
     $('#id_categories').select2();
 
