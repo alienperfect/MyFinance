@@ -38,9 +38,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'MyFinance.middleware.RedirectAnonymousMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'MyFinance.middleware.RedirectAnonymousMiddleware',
 ]
 
 ROOT_URLCONF = 'MyFinance.urls'
