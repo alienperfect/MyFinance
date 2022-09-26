@@ -12,7 +12,8 @@ class RedirectAnonymousMiddleware:
         )
 
     def __call__(self, request):
-        if all([not request.user.is_authenticated, request.path not in self.allowed]):
-            return HttpResponseRedirect(reverse_lazy('main'))
-        response = self.get_response(request)
-        return response
+        return (
+            HttpResponseRedirect(reverse_lazy('main'))
+            if all([not request.user.is_authenticated, request.path not in self.allowed])
+            else self.get_response(request)
+            )
