@@ -25,6 +25,15 @@ class RelatedCategoryMixin:
         return response
 
 
+class AccountingUnitSearchMixin:
+    """Mixin for searching by AccountingUnit fields."""
+    def get_queryset(self):
+        request = self.request.GET
+        values = {key: request[key] for key in request if request[key]}
+        print(values)
+        return AccountingUnit.objects.filter(**values)
+
+
 class AccountingUnitCreateView(RelatedCategoryMixin, CreateView):
     template_name = 'accounting/unit_create.html'
     model = AccountingUnit
@@ -39,7 +48,7 @@ class AccountingUnitUpdateView(RelatedCategoryMixin, UpdateView):
     success_url = reverse_lazy('accounting:unit-list')
 
 
-class AccountingUnitListView(ListView):
+class AccountingUnitListView(AccountingUnitSearchMixin, ListView):
     template_name = 'accounting/unit_list.html'
     model = AccountingUnit
 
