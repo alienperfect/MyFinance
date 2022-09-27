@@ -41,10 +41,8 @@
                         <div class="form-group">
                             <label>Categories</label>
                             <select id="id_categories" class="form-control" name="categories__name__in" multiple>
-                                {% for unit in accountingunit_list %}
-                                    {% for category in unit.categories.all %}
-                                        <option>{{ category }}</option>
-                                    {% endfor %}
+                                {% for category in categories %}
+                                    <option>{{ category }}</option>
                                 {% endfor %}
                             </select>
                         </div>

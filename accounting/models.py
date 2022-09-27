@@ -19,7 +19,7 @@ class AccountingUnit(TimeStampedModel):
         return self.name
 
 
-class Category(models.Model):
+class Category(TimeStampedModel):
     name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):

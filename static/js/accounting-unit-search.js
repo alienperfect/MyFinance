@@ -1,3 +1,3 @@
 $(document).ready(function(){
-    $('#id_categories').select2();
+    $('select').select2();
 });
