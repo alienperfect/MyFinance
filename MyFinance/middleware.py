@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 
 
 class RedirectAnonymousMiddleware:
+    """Redirects anonymous users if they aren't on allowed pages."""
     def __init__(self, get_response):
         self.get_response = get_response
         self.allowed = (
