@@ -30,7 +30,8 @@ class AccountingUnitSearchMixin:
     def get_queryset(self):
         request = self.request.GET
         values = {key: request[key] for key in request if request[key]}
-        print(values)
+        if values.get('categories__name__in'):
+            values['categories__name__in'] = request.getlist('categories__name__in')
         return AccountingUnit.objects.filter(**values)
 
 
