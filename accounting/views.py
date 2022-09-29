@@ -27,12 +27,23 @@ class RelatedCategoryMixin:
 
 class SearchMixin:
     """Mixin for searching by model's fields."""
+    filters = {
+        'name': 'name__icontains',
+        'price': 'price',
+        'purchase_date': 'purchase_date',
+        'created': 'created__date',
+        'categories': 'categories__name__in',
+        }
+
     def get_queryset(self):
         request = self.request.GET
-        values = {key: request[key] for key in request if request[key]}
-        for key in values:
-            if key.endswith('__in'):
-                values[key] = request.getlist(key)
+        values = {}
+        for key in request:
+            if request[key]:
+                if self.filters[key].endswith('__in'):
+                    values[self.filters[key]] = request.getlist(key)
+                else:
+                    values[self.filters[key]] = request[key]
         return self.model.objects.filter(**values).distinct()
 
 
