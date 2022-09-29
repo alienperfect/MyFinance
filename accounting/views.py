@@ -26,15 +26,7 @@ class RelatedCategoryMixin:
 
 
 class SearchMixin:
-    """Mixin for searching by model's fields."""
-    filters = {
-        'name': 'name__icontains',
-        'price': 'price',
-        'purchase_date': 'purchase_date',
-        'created': 'created__date',
-        'categories': 'categories__name__in',
-        }
-
+    """Mixin for searching by model's fields. Requires filters dict to be set."""
     def get_queryset(self):
         request = self.request.GET
         values = {}
@@ -64,6 +56,13 @@ class AccountingUnitUpdateView(RelatedCategoryMixin, UpdateView):
 class AccountingUnitListView(SearchMixin, ListView):
     template_name = 'accounting/unit_list.html'
     model = AccountingUnit
+    filters = {
+        'name': 'name__icontains',
+        'price': 'price',
+        'purchase_date': 'purchase_date',
+        'created': 'created__date',
+        'categories': 'categories__name__in',
+        }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -93,6 +92,10 @@ class CategoryUpdateView(UpdateView):
 class CategoryListView(SearchMixin, ListView):
     template_name = 'accounting/category_list.html'
     model = Category
+    filters = {
+        'name': 'name__icontains',
+        'created': 'created__date',
+        }
 
 
 class CategoryDetailView(DetailView):
