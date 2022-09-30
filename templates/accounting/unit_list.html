@@ -4,10 +4,11 @@
 
 {% block content %}
 {% load static %}
+{% load table_sort %}
     <div class="container">
         <!-- Table -->
         <div class="py-3">
-            <table class="table table-bordered table-hover sortable">
+            <table id="table" class="table table-bordered table-hover">
                 <div class="row">
                     <h4 style="padding-left: 0.65em; margin-top: 7px;">Accounting units</h4>
                     <div class="col my-auto" style="padding-left: 0.5em;">
@@ -16,7 +17,6 @@
                         </a>
                     </div>
                 </div>
-
                 <!-- Search -->
                 <div class="container" style="padding: 0; padding-bottom: 1em;">
                     <form id="id_search_form" method="get"">
@@ -51,25 +51,25 @@
                     </form>
                 </div>
                 <!-- End search -->
-
                 <thead class="thead-light">
                     <tr>
-                        <a href="{% url 'accounting:unit-list' %}">
-                            <th scope="col">Name
-                                <img id="id_sort_name" src="{% static 'img/sort.svg' %}" style="padding-bottom: 3px;">
-                            </th>
-                        </a>
-                        <th scope="col">Price
-                            <img id="id_sort_price" src="{% static 'img/sort.svg' %}" style="padding-bottom: 3px;">
+                        <th scope="col">
+                            <a href="?{% url_replace request 'order_by' 'name' '-' %}">Name</a>
                         </th>
-                        <th scope="col">Purchase date
-                            <img id="id_sort_purchase_date" src="{% static 'img/sort.svg' %}" style="padding-bottom: 3px;">
+
+                        <th scope="col">
+                            <a href="?{% url_replace request 'order_by' 'price' '-' %}">Price</a>
                         </th>
-                        <th scope="col">Created
-                            <img id="id_sort_created" src="{% static 'img/sort.svg' %}" style="padding-bottom: 3px;">
+
+                        <th scope="col">
+                            <a href="?{% url_replace request 'order_by' 'purchase_date' '-' %}">Purchase date</a>
                         </th>
+
+                        <th scope="col">
+                            <a href="?{% url_replace request 'order_by' 'created' '-' %}">Created</a>
+                        </th>
+
                         <th scope="col">Categories
-                            <img id="id_sort_categories" src="{% static 'img/sort.svg' %}" style="padding-bottom: 3px;">
                         </th>
                     </tr>
                 </thead>
@@ -109,7 +109,6 @@
             </table>
         </div>
         <!-- End table -->
-
         <link href="{% static 'select2-4.1.0-rc.0/css/select2.min.css' %}" rel="stylesheet"/>
         <script src="{% static 'select2-4.1.0-rc.0/js/select2.min.js' %}"></script>
         <script src="{% static 'js/select2-init.js' %}"></script>

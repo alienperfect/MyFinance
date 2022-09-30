@@ -26,17 +26,19 @@ class RelatedCategoryMixin:
 
 
 class SearchMixin:
-    """Mixin for searching by model's fields. Requires filters dict to be set."""
+    """Mixin for searching by model's fields. Requires filters and order to be set."""
     def get_queryset(self):
         request = self.request.GET
         values = {}
         for key in request:
             if request[key]:
-                if self.filters[key].endswith('__in'):
+                if key.startswith('order_by'):
+                    self.order = request[key]
+                elif self.filters[key].endswith('__in'):
                     values[self.filters[key]] = request.getlist(key)
                 else:
                     values[self.filters[key]] = request[key]
-        return self.model.objects.filter(**values).distinct()
+        return self.model.objects.filter(**values).order_by(self.order).distinct()
 
 
 class AccountingUnitCreateView(RelatedCategoryMixin, CreateView):
@@ -63,6 +65,7 @@ class AccountingUnitListView(SearchMixin, ListView):
         'created': 'created__date',
         'categories': 'categories__name__in',
         }
+    order = 'created'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,6 +99,7 @@ class CategoryListView(SearchMixin, ListView):
         'name': 'name__icontains',
         'created': 'created__date',
         }
+    order = 'created'
 
 
 class CategoryDetailView(DetailView):
