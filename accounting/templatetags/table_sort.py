@@ -12,7 +12,7 @@ def url_replace(request, field, value, direction=''):
         if dict_[field].startswith('-') and dict_[field].lstrip('-') == value:
             dict_[field] = value
         elif dict_[field].lstrip('-') == value:
-            dict_[field] = "-" + value
+            return ''
         else:
             dict_[field] = direction + value
     else:
