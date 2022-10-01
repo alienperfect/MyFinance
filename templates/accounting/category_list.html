@@ -38,10 +38,14 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">
-                            <a href="?{% url_replace request 'order_by' 'name' '-' %}">Name</a>
+                            <a href="?{% order_by request 'order_by' 'name' '-' %}">Name
+                                <img src="{% get_arrow request 'name' %}">
+                            </a>
                         </th>
                         <th scope="col">
-                            <a href="?{% url_replace request 'order_by' 'created' '-' %}">Created</a>
+                            <a href="?{% order_by request 'order_by' 'created' '-' %}">Created
+                                <img src="{% get_arrow request 'created' %}">
+                            </a>
                         </th>
                     </tr>
                 </thead>

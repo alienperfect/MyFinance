@@ -54,23 +54,30 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">
-                            <a href="?{% url_replace request 'order_by' 'name' '-' %}">Name</a>
+                            <a href="?{% order_by request 'order_by' 'name' '-' %}" style="color: inherit;">Name
+                                <img src="{% get_arrow request 'name' %}">
+                            </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% url_replace request 'order_by' 'price' '-' %}">Price</a>
+                            <a href="?{% order_by request 'order_by' 'price' '-' %}" style="color: inherit;">Price
+                                <img src="{% get_arrow request 'price' %}">
+                            </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% url_replace request 'order_by' 'purchase_date' '-' %}">Purchase date</a>
+                            <a href="?{% order_by request 'order_by' 'purchase_date' '-' %}" style="color: inherit;">Purchase date
+                                <img src="{% get_arrow request 'purchase_date' %}">
+                            </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% url_replace request 'order_by' 'created' '-' %}">Created</a>
+                            <a href="?{% order_by request 'order_by' 'created' '-' %}" style="color: inherit;">Created
+                                <img src="{% get_arrow request 'created' %}">
+                            </a>
                         </th>
 
-                        <th scope="col">Categories
-                        </th>
+                        <th scope="col">Categories</th>
                     </tr>
                 </thead>
                 <tbody>
