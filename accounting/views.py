@@ -52,10 +52,13 @@ class AccountingUnitDetailView(DetailView):
 class AccountingUnitDownloadView(ListView):
     """View for downloading AccountingUnit data."""
     def get(self, request, *args, **kwargs):
+        XLSX = 'xlsx'
+        CSV = 'csv'
+
         format = kwargs.get('format', '')
-        if format == 'xlsx':
+        if format in XLSX:
             response = dump_to_xlsx(request)
-        elif format == 'csv':
+        elif format in CSV:
             response = dump_to_csv(request)
         return response
 

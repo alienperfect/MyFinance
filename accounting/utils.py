@@ -32,7 +32,7 @@ def dump_to_xlsx(request: HttpRequest) -> HttpResponse:
         'categories__name',
     ]
 
-    instances = AccountingUnit.objects.all().values(*headers)
+    instances = AccountingUnit.objects.values(*headers)
     row = col = 0
 
     for header in headers:
@@ -76,7 +76,7 @@ def dump_to_csv(request: HttpRequest) -> HttpResponse:
         'categories__name',
     ]
 
-    instances = AccountingUnit.objects.all().values(*headers)
+    instances = AccountingUnit.objects.values(*headers)
 
     response = HttpResponse(
         content_type='text/csv',
