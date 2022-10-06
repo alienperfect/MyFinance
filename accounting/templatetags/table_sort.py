@@ -1,6 +1,10 @@
-from django import template
+import os
 from urllib.parse import urlencode
 from collections import OrderedDict
+
+from django import template
+from django.conf import settings
+from django.templatetags.static import static
 
 register = template.Library()
 
@@ -22,11 +26,12 @@ def order_by(request, field, value, direction=''):
 @register.simple_tag
 def get_arrow(request, key):
     value = request.GET.get('order_by', '')
-    filename = 'sort'
+    filename = 'img/sort.svg'
 
     if value and key in value:
         if value.startswith('-'):
-            filename = 'sort-down'
+            filename = 'img/sort-down.svg'
         else:
-            filename = 'sort-up'
-    return f'http://127.0.0.1:8000/static/img/{filename}.svg'
+            filename = 'img/sort-up.svg'
+
+    return static(filename)

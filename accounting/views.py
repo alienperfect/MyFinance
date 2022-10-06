@@ -26,19 +26,22 @@ class RelatedCategoryMixin:
 
 
 class SearchMixin:
-    """Mixin for searching by model's fields. Requires filters and order to be set."""
+    """Mixin for searching by model's fields. Requires filters and ordering to be set."""
     def get_queryset(self):
-        request = self.request.GET
+        request_data = self.request.GET
         values = {}
-        for key in request:
-            if request[key]:
-                if key.startswith('order_by'):
-                    self.order = request[key]
-                elif self.filters[key].endswith('__in'):
-                    values[self.filters[key]] = request.getlist(key)
-                else:
-                    values[self.filters[key]] = request[key]
-        return self.model.objects.filter(**values).order_by(self.order).distinct()
+
+        for key in request_data:
+            if not request_data[key]:
+                continue
+
+            if key.startswith('order_by'):
+                self.order_by = request_data[key]
+            elif self.filters[key].endswith('__in'):
+                values[self.filters[key]] = request_data.getlist(key)
+            else:
+                values[self.filters[key]] = request_data[key]
+        return self.model.objects.filter(**values).order_by(self.order_by).distinct()
 
 
 class AccountingUnitCreateView(RelatedCategoryMixin, CreateView):
@@ -58,6 +61,8 @@ class AccountingUnitUpdateView(RelatedCategoryMixin, UpdateView):
 class AccountingUnitListView(SearchMixin, ListView):
     template_name = 'accounting/unit_list.html'
     model = AccountingUnit
+    order_by = 'created'
+
     filters = {
         'name': 'name__icontains',
         'price': 'price',
@@ -65,7 +70,6 @@ class AccountingUnitListView(SearchMixin, ListView):
         'created': 'created__date',
         'categories': 'categories__name__in',
         }
-    order = 'created'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
