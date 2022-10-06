@@ -57,8 +57,8 @@ def dump_to_xlsx(request: HttpRequest) -> dict:
     return {'full_path': full_path, 'content_type': content_type, 'content_disposition': content_disposition}
 
 
-def dump_to_csv(request: HttpRequest) -> HttpResponse:
-    """Dump AccountingUnit data to csv file and return response."""
+def dump_to_csv(request: HttpRequest) -> dict:
+    """Dump AccountingUnit data to csv file and return dict."""
     user_path = user_directory_path(request.user, 'any_filename_will_do')
     full_path = os.path.join(settings.MEDIA_ROOT, user_path)
     os.makedirs(os.path.dirname(full_path), exist_ok=True)
