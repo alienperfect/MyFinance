@@ -4,7 +4,7 @@ from django.http import JsonResponse
 
 from accounting.models import AccountingUnit, Category
 from accounting.forms import AccountingUnitForm, CategoryForm
-from accounting.utils import is_ajax
+from accounting.utils import is_ajax, dump_to_xlsx, dump_to_csv 
 
 
 class RelatedCategoryMixin:
@@ -47,6 +47,17 @@ class AccountingUnitListView(ListView):
 class AccountingUnitDetailView(DetailView):
     template_name = 'accounting/unit_detail.html'
     model = AccountingUnit
+
+
+class AccountingUnitDownloadView(ListView):
+    """View for downloading AccountingUnit data."""
+    def get(self, request, *args, **kwargs):
+        format = kwargs.get('format', '')
+        if format == 'xlsx':
+            response = dump_to_xlsx(request)
+        elif format == 'csv':
+            response = dump_to_csv(request)
+        return response
 
 
 class CategoryCreateView(CreateView):
