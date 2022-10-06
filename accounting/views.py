@@ -26,7 +26,7 @@ class RelatedCategoryMixin:
 
 
 class SearchMixin:
-    """Mixin for searching by model's fields. Requires filters and ordering to be set."""
+    """Mixin for searching by model's fields. Requires filters and order_by to be set."""
     def get_queryset(self):
         request_data = self.request.GET
         values = {}
