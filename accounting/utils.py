@@ -14,29 +14,32 @@ def is_ajax(request):
         return True
 
 
-def dump_to_xlsx(request: HttpRequest) -> HttpResponse:
-    """Dump AccountingUnit data to xlsx file and return response."""
+def dump_to_xlsx(request: HttpRequest) -> dict:
+    """Dump AccountingUnit data to xlsx file and return dict."""
     user_path = user_directory_path(request.user, 'any_filename_will_do')
     full_path = os.path.join(settings.MEDIA_ROOT, user_path)
     os.makedirs(os.path.dirname(full_path), exist_ok=True)
 
+    content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    content_disposition = 'attachment; filename="accounting.xlsx"'
+
     workbook = xlsxwriter.Workbook(full_path, {'remove_timezone': True})
     worksheet = workbook.add_worksheet()
 
-    headers = [
-        'id',
-        'name',
-        'price',
-        'created',
-        'purchase_date',
-        'categories__name',
-    ]
+    headers = {
+        'id': 'id',
+        'name': 'name',
+        'price': 'price',
+        'created': 'created',
+        'purchase_date': 'purchase date',
+        'categories__name': 'categories',
+    }
 
-    instances = AccountingUnit.objects.values(*headers)
+    instances = AccountingUnit.objects.values(*[val for val in headers])
     row = col = 0
 
     for header in headers:
-        worksheet.write(row, col, header)
+        worksheet.write(row, col, headers[header])
         col += 1
 
     col = 0
@@ -51,14 +54,7 @@ def dump_to_xlsx(request: HttpRequest) -> HttpResponse:
 
     workbook.close()
 
-    with open(full_path, 'rb') as f:
-        response = HttpResponse(
-            f.read(),
-            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            headers={'Content-Disposition': 'attachment; filename="accounting.xlsx"'},
-            )
-
-        return response
+    return {'full_path': full_path, 'content_type': content_type, 'content_disposition': content_disposition}
 
 
 def dump_to_csv(request: HttpRequest) -> HttpResponse:
@@ -67,29 +63,28 @@ def dump_to_csv(request: HttpRequest) -> HttpResponse:
     full_path = os.path.join(settings.MEDIA_ROOT, user_path)
     os.makedirs(os.path.dirname(full_path), exist_ok=True)
 
-    headers = [
-        'id',
-        'name',
-        'price',
-        'created',
-        'purchase_date',
-        'categories__name',
-    ]
+    content_type = 'text/csv'
+    content_disposition = 'attachment; filename="accounting.csv"'
 
-    instances = AccountingUnit.objects.values(*headers)
+    headers = {
+        'id': 'id',
+        'name': 'name',
+        'price': 'price',
+        'created': 'created',
+        'purchase_date': 'purchase date',
+        'categories__name': 'categories',
+    }
 
-    response = HttpResponse(
-        content_type='text/csv',
-        headers={'Content-Disposition': 'attachment; filename="accounting.csv"'},
-    )
+    instances = AccountingUnit.objects.values(*[val for val in headers])
 
-    writer = csv.writer(response)
-    writer.writerow([*headers])
+    with open(full_path, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers[header] for header in headers)
 
-    for instance in instances:
-        row = []
-        for key in instance:
-            row.append(instance[key])
-        writer.writerow(row)
+        for instance in instances:
+            row = []
+            for key in instance:
+                row.append(instance[key])
+            writer.writerow(*[row])
 
-    return response
+    return {'full_path': full_path, 'content_type': content_type, 'content_disposition': content_disposition}
