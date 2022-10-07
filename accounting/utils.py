@@ -3,7 +3,7 @@ import csv
 import xlsxwriter
 
 from django.conf import settings
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 
 from accounting.models import AccountingUnit
 from accounts.utils import user_directory_path
