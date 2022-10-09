@@ -71,7 +71,7 @@ class AccountingUnitListView(SearchMixin, ListView):
 
     filters = {
         'name': 'name__icontains',
-        'price': 'price',
+        'total_price': 'total_price',
         'purchase_date': 'purchase_date',
         'created': 'created__date',
         'categories': 'categories__name__in',

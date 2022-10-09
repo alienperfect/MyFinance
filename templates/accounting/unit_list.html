@@ -35,8 +35,8 @@
                                 <input type="text" class="form-control" name="name">
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Price</label>
-                                <input type="text" class="form-control" name="price" numval>
+                                <label>Total price</label>
+                                <input type="text" class="form-control" name="total_price" numval>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Purchase date</label>
@@ -69,8 +69,14 @@
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'price' '-' %}" style="color: inherit;">Price
-                                <img src="{% get_arrow request 'price' %}">
+                            <a href="?{% order_by request 'order_by' 'quantity' '-' %}" style="color: inherit;">Quantity
+                                <img src="{% get_arrow request 'quantity' %}">
+                            </a>
+                        </th>
+
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'total_price' '-' %}" style="color: inherit;">Total price
+                                <img src="{% get_arrow request 'total_price' %}">
                             </a>
                         </th>
 
@@ -99,7 +105,15 @@
                         </td>
                         <td>
                             <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
-                                ${{ unit.price }}
+                                {{ unit.quantity }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
+                                ${{ unit.total_price }}
+                                {% if unit.quantity > 1 %}
+                                    ({{ unit.price }})
+                                {% endif %}
                             </a>
                         </td>
                         <td>
