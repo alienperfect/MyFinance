@@ -15,17 +15,18 @@
                         <a href="{% url 'accounting:unit-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
                             +
                         </a>
-                    </div>
-                    <div class="btn-group" style="padding-left: 0.5em;">
-                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Export
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{% url 'accounting:unit-download' format='xlsx' %}">XLSX</a>
-                            <a class="dropdown-item" href="{% url 'accounting:unit-download' format='csv' %}">CSV</a>
+                        <div class="btn-group" style="padding-left: 0.5em;">
+                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Export
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'accounting:unit-download' format='xlsx' %}">XLSX</a>
+                                <a class="dropdown-item" href="{% url 'accounting:unit-download' format='csv' %}">CSV</a>
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <!-- Search -->
                 <div class="container" style="padding: 0; padding-bottom: 1em;">
                     <form id="id_search_form" method="get"">
