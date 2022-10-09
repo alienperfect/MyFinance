@@ -3,10 +3,12 @@
 {% block title %}Accounting{% endblock %}
 
 {% block content %}
+{% load static %}
+{% load table_sort %}
     <div class="container">
         <!-- Table -->
         <div class="py-3">
-            <table class="table table-bordered table-hover">
+            <table id="table" class="table table-bordered table-hover">
                 <div class="row">
                     <h4 style="padding-left: 0.65em; margin-top: 7px;">Accounting units</h4>
                     <div class="col my-auto" style="padding-left: 0.5em;">
@@ -24,13 +26,66 @@
                         </div>
                     </div>
                 </div>
+                <!-- Search -->
+                <div class="container" style="padding: 0; padding-bottom: 1em;">
+                    <form id="id_search_form" method="get"">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Name</label>
+                                <input type="text" class="form-control" name="name">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Price</label>
+                                <input type="text" class="form-control" name="price" numval>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Purchase date</label>
+                                <input type="date" class="form-control" name="purchase_date">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Created</label>
+                                <input type="date" class="form-control" name="created">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Categories</label>
+                            <select id="id_categories" class="form-control" name="categories" multiple>
+                                {% for category in categories %}
+                                    <option>{{ category }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                        <a class="btn btn-light" href="{% url 'accounting:unit-list' %}" style="background-color: rgb(238, 238, 238);">Show all</a>
+                    </form>
                 </div>
+                <!-- End search -->
                 <thead class="thead-light">
                     <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Date of purchase</th>
-                        <th scope="col">Date added</th>
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'name' '-' %}" style="color: inherit;">Name
+                                <img src="{% get_arrow request 'name' %}">
+                            </a>
+                        </th>
+
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'price' '-' %}" style="color: inherit;">Price
+                                <img src="{% get_arrow request 'price' %}">
+                            </a>
+                        </th>
+
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'purchase_date' '-' %}" style="color: inherit;">Purchase date
+                                <img src="{% get_arrow request 'purchase_date' %}">
+                            </a>
+                        </th>
+
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'created' '-' %}" style="color: inherit;">Created
+                                <img src="{% get_arrow request 'created' %}">
+                            </a>
+                        </th>
+
                         <th scope="col">Categories</th>
                     </tr>
                 </thead>
@@ -70,5 +125,9 @@
             </table>
         </div>
         <!-- End table -->
+        <link href="{% static 'select2-4.1.0-rc.0/css/select2.min.css' %}" rel="stylesheet"/>
+        <script src="{% static 'select2-4.1.0-rc.0/js/select2.min.js' %}"></script>
+        <script src="{% static 'js/select2-init.js' %}"></script>
+        <script src="{% static 'js/validate-numeric.js' %}"></script>
     </div>
 {% endblock %}

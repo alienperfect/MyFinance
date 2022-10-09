@@ -28,6 +28,28 @@ class RelatedCategoryMixin:
         return response
 
 
+class SearchMixin:
+    """Mixin for searching by model's fields. Requires filters and ordering to be set."""
+    ordering: str = None
+
+    def get_queryset(self):
+        request_data = self.request.GET
+        values = {}
+
+        for key in request_data:
+            if not request_data[key]:
+                continue
+
+            if key.startswith('order_by'):
+                self.ordering = request_data[key]
+            elif self.filters[key].endswith('__in'):
+                values[self.filters[key]] = request_data.getlist(key)
+            else:
+                values[self.filters[key]] = request_data[key]
+
+        return self.model.objects.filter(**values).order_by(self.ordering).distinct()
+
+
 class AccountingUnitCreateView(RelatedCategoryMixin, CreateView):
     template_name = 'accounting/unit_create.html'
     model = AccountingUnit
@@ -42,9 +64,23 @@ class AccountingUnitUpdateView(RelatedCategoryMixin, UpdateView):
     success_url = reverse_lazy('accounting:unit-list')
 
 
-class AccountingUnitListView(ListView):
+class AccountingUnitListView(SearchMixin, ListView):
     template_name = 'accounting/unit_list.html'
     model = AccountingUnit
+    ordering = 'created'
+
+    filters = {
+        'name': 'name__icontains',
+        'price': 'price',
+        'purchase_date': 'purchase_date',
+        'created': 'created__date',
+        'categories': 'categories__name__in',
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
 
 
 class AccountingUnitDetailView(DetailView):
@@ -80,9 +116,16 @@ class CategoryUpdateView(UpdateView):
     success_url = reverse_lazy('accounting:category-list')
 
 
-class CategoryListView(ListView):
+class CategoryListView(SearchMixin, ListView):
     template_name = 'accounting/category_list.html'
     model = Category
+
+    filters = {
+        'name': 'name__icontains',
+        'created': 'created__date',
+        }
+
+    ordering = 'created'
 
 
 class CategoryDetailView(DetailView):

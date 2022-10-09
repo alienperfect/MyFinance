@@ -3,14 +3,73 @@
 {% block title %}Categories{% endblock %}
 
 {% block content %}
+{% load static %}
+{% load table_sort %}
     <div class="container">
-        <div class="d-flex justify-content-end">
-            <a href="{% url 'accounting:category-create' %}">new</a>
+        <!-- Table -->
+        <div class="py-3">
+            <table class="table table-bordered table-hover">
+                <div class="row">
+                    <h4 style="padding-left: 0.65em; margin-top: 7px;">Categories</h4>
+                    <div class="col my-auto" style="padding-left: 0.5em;">
+                        <a href="{% url 'accounting:category-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
+                            +
+                        </a>
+                    </div>
+                </div>
+                <!-- Search -->
+                <div class="container" style="padding: 0; padding-bottom: 1em;">
+                    <form id="id_search_form" method="get"">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Name</label>
+                                <input type="text" class="form-control" name="name">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Created</label>
+                                <input type="date" class="form-control" name="created">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                        <a class="btn btn-light" href="{% url 'accounting:category-list' %}" style="background-color: rgb(238, 238, 238);">Show all</a>
+                    </form>
+                </div>
+                <!-- End search -->
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'name' '-' %}">Name
+                                <img src="{% get_arrow request 'name' %}">
+                            </a>
+                        </th>
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'created' '-' %}">Created
+                                <img src="{% get_arrow request 'created' %}">
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in category_list %}
+                    <tr>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:category-update' pk=category.pk %}">
+                                {{ category.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:category-update' pk=category.pk %}">
+                                {{ category.created }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        <div class="list-group">
-            {% for category in category_list %}
-                <a class="list-group-item list-group-item-action" href="{% url 'accounting:category-detail' pk=category.pk %}" >{{ category.name }}</a>
-            {% endfor %}
-        </div>
+        <!-- End table -->
+        <link href="{% static 'select2-4.1.0-rc.0/css/select2.min.css' %}" rel="stylesheet"/>
+        <script src="{% static 'select2-4.1.0-rc.0/js/select2.min.js' %}"></script>
+        <script src="{% static 'js/validate-numeric.js' %}"></script>
     </div>
 {% endblock %}
