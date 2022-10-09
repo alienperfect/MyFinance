@@ -1,4 +1,3 @@
-import os
 from typing import Callable
 
 from django.urls import reverse_lazy
@@ -98,7 +97,7 @@ class AccountingUnitDownloadView(ListView):
         with open(statistics_data.get('full_path'), 'rb') as f:
             response = HttpResponse(f.read(), content_type=statistics_data.get('content_type'))
             response['Content-Disposition'] = f'filename={statistics_data.get("content_disposition")}'
-
+            print(statistics_data.get('full_path'))
         return response
 
 
