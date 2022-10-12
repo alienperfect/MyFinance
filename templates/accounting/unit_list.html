@@ -5,6 +5,7 @@
 {% block content %}
 {% load static %}
 {% load table_sort %}
+{% load accounting_extras %}
     <div class="container">
         <!-- Table -->
         <div class="py-3">
@@ -99,16 +100,14 @@
                                 <img src="{% get_arrow request 'receive_date' %}">
                             </a>
                         </th>
-
-                        <th scope="col">Categories</th>
                         
                         <th scope="col">
                             <a href="?{% order_by request 'order_by' 'created' '-' %}" style="color: inherit;">Created
                                 <img src="{% get_arrow request 'created' %}">
                             </a>
                         </th>
-
-                        
+                    
+                        <th scope="col">Categories</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -116,13 +115,13 @@
                         {% for unit in value %}
                             <tr>
                                 <td>
-                                    <a style="color: inherit;" href="">
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
                                         {{ unit.name }}
                                     </a>
                                 </td>
 
                                 <td>
-                                    <a style="color: inherit;" href="">
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
                                         {% if unit.price %}
                                             ${{ unit.price }}
                                         {% endif %}
@@ -130,7 +129,7 @@
                                 </td>
 
                                 <td>
-                                    <a style="color: inherit;" href="">
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
                                         {% if unit.income %}
                                             ${{ unit.income }}
                                         {% endif %}
@@ -138,32 +137,30 @@
                                 </td>
 
                                 <td>
-                                    <a style="color: inherit;" href="">
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
                                         {{ unit.purchase_date }}
                                     </a>
                                 </td>
 
                                 <td>
-                                    <a style="color: inherit;" href="">
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
                                         {{ unit.receive_date }}
                                     </a>
                                 <td>
-                                
-                                    <td>
-                                        {% for category in unit.categories.all %}
-                                            <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
-                                                <span class="badge badge-info">{{ category }}</span>
-                                            </a>
-                                        {% endfor %}
-                                    </td>
 
                                 <td>
-                                    <a style="color: inherit;" href="">
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
                                         {{ unit.created }}
                                     </a>
                                 </td>
-                                
-                                
+
+                                <td>
+                                    {% for category in unit.categories.all %}
+                                        <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
+                                            <span class="badge badge-info">{{ category }}</span>
+                                        </a>
+                                    {% endfor %}
+                                </td>
                             </tr>
                         {% endfor %}
                     {% endfor %}
