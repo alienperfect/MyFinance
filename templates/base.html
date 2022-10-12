@@ -24,7 +24,9 @@
                 Accounting
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="{% url 'accounting:unit-list' %}">Accounting</a>
+                <a class="dropdown-item dropright" href="{% url 'accounting:unit-list' %}">Accounting</a>
+                <a class="dropdown-item dropright" href="{% url 'accounting:expenses-unit-list' %}">Expenses</a>
+                <a class="dropdown-item dropright" href="{% url 'accounting:income-unit-list' %}">Income</a>
                 <a class="dropdown-item" href="{% url 'accounting:category-list' %}">Categories</a>
                 </div>
             </li>

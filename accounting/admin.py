@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from accounting.models import AccountingUnit, Category
+from accounting.models import Category
 
-admin.site.register(AccountingUnit)
 admin.site.register(Category)

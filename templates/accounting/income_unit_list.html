@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Accounting{% endblock %}
+{% block title %}Income{% endblock %}
 
 {% block content %}
 {% load static %}
@@ -10,9 +10,9 @@
         <div class="py-3">
             <table id="table" class="table table-bordered table-hover">
                 <div class="row">
-                    <h4 style="padding-left: 0.65em; margin-top: 7px;">Accounting</h4>
+                    <h4 style="padding-left: 0.65em; margin-top: 7px;">Income</h4>
                     <div class="col my-auto" style="padding-left: 0.5em;">
-                        <a href="{% url 'accounting:expenses-unit-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
+                        <a href="{% url 'accounting:income-unit-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
                             +
                         </a>
                     </div>
@@ -35,16 +35,8 @@
                                 <input type="text" class="form-control" name="name">
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Price</label>
-                                <input type="text" class="form-control" name="price" numval>
-                            </div>
-                            <div class="form-group col-md-6">
                                 <label>Income</label>
                                 <input type="text" class="form-control" name="income" numval>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Purchase date</label>
-                                <input type="date" class="form-control" name="purchase_date">
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Receive date</label>
@@ -64,7 +56,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Search</button>
-                        <a class="btn btn-light" href="{% url 'accounting:unit-list' %}" style="background-color: rgb(238, 238, 238);">Show all</a>
+                        <a class="btn btn-light" href="{% url 'accounting:income-unit-list' %}" style="background-color: rgb(238, 238, 238);">Show all</a>
                     </form>
                 </div>
                 <!-- End search -->
@@ -77,20 +69,8 @@
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'price' '-' %}" style="color: inherit;">Price
-                                <img src="{% get_arrow request 'price' %}">
-                            </a>
-                        </th>
-                        
-                        <th scope="col">
                             <a href="?{% order_by request 'order_by' 'income' '-' %}" style="color: inherit;">Income
                                 <img src="{% get_arrow request 'income' %}">
-                            </a>
-                        </th>
-
-                        <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'purchase_date' '-' %}" style="color: inherit;">Purchase date
-                                <img src="{% get_arrow request 'purchase_date' %}">
                             </a>
                         </th>
 
@@ -100,72 +80,46 @@
                             </a>
                         </th>
 
-                        <th scope="col">Categories</th>
-                        
                         <th scope="col">
                             <a href="?{% order_by request 'order_by' 'created' '-' %}" style="color: inherit;">Created
                                 <img src="{% get_arrow request 'created' %}">
                             </a>
                         </th>
 
-                        
+                        <th scope="col">Categories</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for key, value in unit_list.items %}
-                        {% for unit in value %}
-                            <tr>
-                                <td>
-                                    <a style="color: inherit;" href="">
-                                        {{ unit.name }}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="">
-                                        {% if unit.price %}
-                                            ${{ unit.price }}
-                                        {% endif %}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="">
-                                        {% if unit.income %}
-                                            ${{ unit.income }}
-                                        {% endif %}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="">
-                                        {{ unit.purchase_date }}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="">
-                                        {{ unit.receive_date }}
-                                    </a>
-                                <td>
-                                
-                                    <td>
-                                        {% for category in unit.categories.all %}
-                                            <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
-                                                <span class="badge badge-info">{{ category }}</span>
-                                            </a>
-                                        {% endfor %}
-                                    </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="">
-                                        {{ unit.created }}
-                                    </a>
-                                </td>
-                                
-                                
-                            </tr>
-                        {% endfor %}
+                    {% for unit in incomeunit_list %}
+                    <tr>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                                {{ unit.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                                ${{ unit.income }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                                {{ unit.receive_date }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                                {{ unit.created }}
+                            </a>
+                        </td>
+                        <td>
+                            {% for category in unit.categories.all %}
+                                <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
+                                    <span class="badge badge-info">{{ category }}</span>
+                                </a>
+                            {% endfor %}
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

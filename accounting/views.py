@@ -1,12 +1,12 @@
-import os
 from typing import Callable
+from itertools import chain
 
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from django.http import JsonResponse, HttpRequest, HttpResponse
 
-from accounting.models import AccountingUnit, Category
-from accounting.forms import AccountingUnitForm, CategoryForm
+from accounting.models import ExpensesUnit, IncomeUnit, Category
+from accounting.forms import ExpensesUnitForm, IncomeUnitForm, CategoryForm
 from accounting import utils
 
 
@@ -19,17 +19,20 @@ class RelatedCategoryMixin:
             category = Category.objects.create(name=request.POST.get('name'))
             self.categories.append(category)
             return JsonResponse({'id': category.id})
+
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
         response = super().form_valid(form)
         if not self.object and self.categories:
             self.object.categories.add(*self.categories)
+
         return response
 
 
-class SearchMixin:
-    """Mixin for searching by model's fields. Requires filters and ordering to be set."""
+class SingleObjectSearchMixin:
+    """Mixin for searching and ordering on a model."""
+    filters: dict = None
     ordering: str = None
 
     def get_queryset(self):
@@ -50,42 +53,110 @@ class SearchMixin:
         return self.model.objects.filter(**values).order_by(self.ordering).distinct()
 
 
-class AccountingUnitCreateView(RelatedCategoryMixin, CreateView):
+class MultipleObjectSearchMixin:
+    """Mixin for searching and ordering on multiple models."""
+    filters: dict = None
+    ordering: str = None
+    model_list: list = None
+
+    def get_queryset(self):
+        request_data = self.request.GET
+        values = {}
+        queryset = {}
+
+        for model in self.model_list:
+            for key in request_data:
+                if not request_data[key]:
+                    continue
+                
+                fields = [field.name for field in model._meta.get_fields()]
+
+                if key not in fields:
+                    if key.startswith('order_by') and request_data[key].replace('-', '') in fields:
+                        self.ordering = request_data[key]
+                    continue
+
+                elif self.filters[key].endswith('__in'):
+                    values[self.filters[key]] = request_data.getlist(key)
+                else:
+                    values[self.filters[key]] = request_data[key]
+
+            queryset[model.__name__] = model.objects.filter(**values).order_by(self.ordering).distinct()
+            values.clear()
+            self.ordering = '-created'
+
+        return queryset
+
+
+class ExpensesUnitCreateView(RelatedCategoryMixin, CreateView):
     template_name = 'accounting/unit_create.html'
-    model = AccountingUnit
-    form_class = AccountingUnitForm
+    model = ExpensesUnit
+    form_class = ExpensesUnitForm
     success_url = reverse_lazy('accounting:unit-list')
 
 
-class AccountingUnitUpdateView(RelatedCategoryMixin, UpdateView):
+class IncomeUnitCreateView(RelatedCategoryMixin, CreateView):
+    template_name = 'accounting/unit_create.html'
+    model = IncomeUnit
+    form_class = IncomeUnitForm
+    success_url = reverse_lazy('accounting:unit-list')
+
+
+class ExpensesUnitUpdateView(RelatedCategoryMixin, UpdateView):
     template_name = 'accounting/unit_update.html'
-    model = AccountingUnit
-    form_class = AccountingUnitForm
+    model = ExpensesUnit
+    form_class = ExpensesUnitForm
     success_url = reverse_lazy('accounting:unit-list')
 
 
-class AccountingUnitListView(SearchMixin, ListView):
-    template_name = 'accounting/unit_list.html'
-    model = AccountingUnit
-    ordering = 'created'
+class IncomeUnitUpdateView(RelatedCategoryMixin, UpdateView):
+    template_name = 'accounting/unit_update.html'
+    model = IncomeUnit
+    form_class = IncomeUnitForm
+    success_url = reverse_lazy('accounting:unit-list')
+
+
+class UnitListMixin:
+    """Mixin for all UnitListView classes."""
 
     filters = {
         'name': 'name__icontains',
-        'price': 'price',
-        'purchase_date': 'purchase_date',
         'created': 'created__date',
         'categories': 'categories__name__in',
+        'price': 'price',
+        'purchase_date': 'purchase_date',
+        'income': 'income',
+        'receive_date': 'receive_date',
         }
+
+    ordering = '-created'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+
         return context
 
 
+class UnitListView(UnitListMixin, MultipleObjectSearchMixin, ListView):
+    template_name = 'accounting/unit_list.html'
+    model_list = [ExpensesUnit, IncomeUnit]
+    context_object_name = 'unit_list'
+
+
+class ExpensesUnitListView(UnitListMixin, SingleObjectSearchMixin, ListView):
+    template_name = 'accounting/expenses_unit_list.html'
+    model = ExpensesUnit
+
+
+class IncomeUnitListView(UnitListMixin, SingleObjectSearchMixin, ListView):
+    template_name = 'accounting/income_unit_list.html'
+    model = IncomeUnit
+
+
 class AccountingUnitDetailView(DetailView):
-    template_name = 'accounting/unit_detail.html'
-    model = AccountingUnit
+    template_name = 'accounting/expenses_unit_detail.html'
+    model = ExpensesUnit
 
 
 class AccountingUnitDownloadView(ListView):
@@ -116,7 +187,7 @@ class CategoryUpdateView(UpdateView):
     success_url = reverse_lazy('accounting:category-list')
 
 
-class CategoryListView(SearchMixin, ListView):
+class CategoryListView(SingleObjectSearchMixin, ListView):
     template_name = 'accounting/category_list.html'
     model = Category
 
