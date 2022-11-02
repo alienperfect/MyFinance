@@ -29,7 +29,8 @@ def dump_to_xlsx(request: HttpRequest) -> dict:
     headers = {
         'id': 'id',
         'name': 'name',
-        'price': 'price',
+        'quantity': 'quantity',
+        'total_price': 'total_price',
         'created': 'created',
         'purchase_date': 'purchase date',
         'categories__name': 'categories',
@@ -69,7 +70,8 @@ def dump_to_csv(request: HttpRequest) -> dict:
     headers = {
         'id': 'id',
         'name': 'name',
-        'price': 'price',
+        'quantity': 'quantity',
+        'total_price': 'total_price',
         'created': 'created',
         'purchase_date': 'purchase date',
         'categories__name': 'categories',
