@@ -5,14 +5,15 @@
 {% block content %}
 {% load static %}
 {% load table_sort %}
+{% load accounting_extras %}
     <div class="container">
         <!-- Table -->
         <div class="py-3">
             <table id="table" class="table table-bordered table-hover">
                 <div class="row">
-                    <h4 style="padding-left: 0.65em; margin-top: 7px;">Accounting units</h4>
+                    <h4 style="padding-left: 0.65em; margin-top: 7px;">Accounting</h4>
                     <div class="col my-auto" style="padding-left: 0.5em;">
-                        <a href="{% url 'accounting:unit-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
+                        <a href="{% url 'accounting:expenses-unit-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
                             +
                         </a>
                         <div class="btn-group" style="padding-left: 0.5em;">
@@ -40,8 +41,16 @@
                                 <input type="text" class="form-control" name="total_price" numval>
                             </div>
                             <div class="form-group col-md-6">
+                                <label>Income</label>
+                                <input type="text" class="form-control" name="income" numval>
+                            </div>
+                            <div class="form-group col-md-6">
                                 <label>Purchase date</label>
                                 <input type="date" class="form-control" name="purchase_date">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Receive date</label>
+                                <input type="date" class="form-control" name="receive_date">
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Created</label>
@@ -80,6 +89,12 @@
                                 <img src="{% get_arrow request 'total_price' %}">
                             </a>
                         </th>
+                        
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'income' '-' %}" style="color: inherit;">Income
+                                <img src="{% get_arrow request 'income' %}">
+                            </a>
+                        </th>
 
                         <th scope="col">
                             <a href="?{% order_by request 'order_by' 'purchase_date' '-' %}" style="color: inherit;">Purchase date
@@ -88,53 +103,73 @@
                         </th>
 
                         <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'receive_date' '-' %}" style="color: inherit;">Receive date
+                                <img src="{% get_arrow request 'receive_date' %}">
+                            </a>
+                        </th>
+                        
+                        <th scope="col">
                             <a href="?{% order_by request 'order_by' 'created' '-' %}" style="color: inherit;">Created
                                 <img src="{% get_arrow request 'created' %}">
                             </a>
                         </th>
-
+                    
                         <th scope="col">Categories</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for unit in accountingunit_list %}
-                    <tr>
-                        <td>
-                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
-                                {{ unit.name }}
-                            </a>
-                        </td>
-                        <td>
-                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
-                                {{ unit.quantity }}
-                            </a>
-                        </td>
-                        <td>
-                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
-                                ${{ unit.total_price }}
-                                {% if unit.quantity > 1 %}
-                                    ({{ unit.price }})
-                                {% endif %}
-                            </a>
-                        </td>
-                        <td>
-                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
-                                {{ unit.purchase_date }}
-                            </a>
-                        </td>
-                        <td>
-                            <a style="color: inherit;" href="{% url 'accounting:unit-update' pk=unit.pk %}">
-                                {{ unit.created }}
-                            </a>
-                        </td>
-                        <td>
-                            {% for category in unit.categories.all %}
-                                <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
-                                    <span class="badge badge-info">{{ category }}</span>
-                                </a>
-                            {% endfor %}
-                        </td>
-                    </tr>
+                    {% for key, value in unit_list.items %}
+                        {% for unit in value %}
+                            <tr>
+                                <td>
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                        {{ unit.name }}
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                        {% if unit.price %}
+                                            ${{ unit.price }}
+                                        {% endif %}
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                        {% if unit.income %}
+                                            ${{ unit.income }}
+                                        {% endif %}
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                        {{ unit.purchase_date }}
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                        {{ unit.receive_date }}
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                        {{ unit.created }}
+                                    </a>
+                                </td>
+
+                                <td>
+                                    {% for category in unit.categories.all %}
+                                        <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
+                                            <span class="badge badge-info">{{ category }}</span>
+                                        </a>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
                     {% endfor %}
                 </tbody>
             </table>
