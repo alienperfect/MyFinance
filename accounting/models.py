@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 
 from django_extensions.db.models import TimeStampedModel
 
