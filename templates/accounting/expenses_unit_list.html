@@ -69,6 +69,12 @@
                         </th>
 
                         <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'quantity' '-' %}" style="color: inherit;">Quantity
+                                <img src="{% get_arrow request 'quantity' %}">
+                            </a>
+                        </th>
+                        
+                        <th scope="col">
                             <a href="?{% order_by request 'order_by' 'price' '-' %}" style="color: inherit;">Price
                                 <img src="{% get_arrow request 'price' %}">
                             </a>
@@ -95,6 +101,11 @@
                         <td>
                             <a style="color: inherit;" href="{% url 'accounting:expenses-unit-update' pk=unit.pk %}">
                                 {{ unit.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a style="color: inherit;" href="{% url 'accounting:expenses-unit-update' pk=unit.pk %}">
+                                {{ unit.quantity }}
                             </a>
                         </td>
                         <td>

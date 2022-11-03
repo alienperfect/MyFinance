@@ -123,9 +123,9 @@ class UnitListMixin:
         'name': 'name__icontains',
         'created': 'created__date',
         'categories': 'categories__name__in',
-        'price': 'price',
+        'total_price': 'total_price',
+        'total_income': 'total_income',
         'purchase_date': 'purchase_date',
-        'income': 'income',
         'receive_date': 'receive_date',
         }
 
