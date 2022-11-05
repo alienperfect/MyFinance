@@ -7,174 +7,299 @@
 {% load table_sort %}
 {% load accounting_extras %}
     <div class="container">
-        <!-- Table -->
         <div class="py-3">
-            <table id="table" class="table table-bordered table-hover">
-                <div class="row">
-                    <h4 style="padding-left: 0.65em; margin-top: 7px;">Accounting</h4>
-                    <div class="col my-auto" style="padding-left: 0.5em;">
-                        <a href="{% url 'accounting:expenses-unit-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
-                            +
-                        </a>
-                        <div class="btn-group" style="padding-left: 0.5em;">
-                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Export
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{% url 'accounting:unit-download' format='xlsx' %}">XLSX</a>
-                                <a class="dropdown-item" href="{% url 'accounting:unit-download' format='csv' %}">CSV</a>
-                            </div>
+
+            <!-- Top buttons -->
+            <div class="row">
+                <h4 style="padding-left: 0.65em; margin-top: 7px;">Accounting</h4>
+                <div class="col my-auto" style="padding-left: 0.5em;">
+                    <!--<div class="btn-group" style="padding-left: 0.5em;">
+                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Export all
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'accounting:unit-download' format='xlsx' %}">XLSX</a>
+                            <a class="dropdown-item" href="{% url 'accounting:unit-download' format='csv' %}">CSV</a>
+                        </div>
+                    </div><-->
+                </div>
+            </div>
+            <!-- End top buttons -->
+
+            <!-- Tabs -->
+            <div class="text-center" style="padding-bottom: 1em;">
+                <ul class="nav nav-tabs justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link" href="?model=expenses" id="id_expenses_link">Expenses</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="?model=income" id="id_income_link">Income</a>
+                    </li>
+            </div>
+            <!-- End tabs -->
+
+            <!-- Expenses search -->
+            <div class="container" style="padding: 0; padding-bottom: 1em;" id="id_expenses_div">
+                <form id="id_expenses_form" method="get">
+                    <input type="hidden" name="model" value="expenses">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Price</label>
+                            <input type="text" class="form-control" name="total_price" numval>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Purchase date</label>
+                            <input type="date" class="form-control" name="purchase_date">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Created</label>
+                            <input type="date" class="form-control" name="created">
                         </div>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label>Categories</label>
+                        <select id="id_categories" class="form-control" name="categories" multiple>
+                            {% for category in categories %}
+                                <option>{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" id="id_expenses_button">Search</button>
+                    <a class="btn btn-light" href="{% url 'accounting:unit-list' %}?model=expenses" style="background-color: rgb(238, 238, 238);">Show all</a>
+                </form>
+            </div>
+            <!-- End expenses search -->
 
-                <!-- Search -->
-                <div class="container" style="padding: 0; padding-bottom: 1em;">
-                    <form id="id_search_form" method="get"">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label>Name</label>
-                                <input type="text" class="form-control" name="name">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Total price</label>
-                                <input type="text" class="form-control" name="total_price" numval>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Income</label>
-                                <input type="text" class="form-control" name="income" numval>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Purchase date</label>
-                                <input type="date" class="form-control" name="purchase_date">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Receive date</label>
-                                <input type="date" class="form-control" name="receive_date">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Created</label>
-                                <input type="date" class="form-control" name="created">
-                            </div>
+            <!-- Income search -->
+            <div class="container" style="padding: 0; padding-bottom: 1em;" id="id_income_div">
+                <form id="id_income_form" method="get">
+                    <input type="hidden" name="model" value="income">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="name">
                         </div>
-                        <div class="form-group">
-                            <label>Categories</label>
-                            <select id="id_categories" class="form-control" name="categories" multiple>
-                                {% for category in categories %}
-                                    <option>{{ category }}</option>
-                                {% endfor %}
-                            </select>
+                        <div class="form-group col-md-6">
+                            <label>Income</label>
+                            <input type="text" class="form-control" name="total_income" numval>
                         </div>
-                        <button type="submit" class="btn btn-primary">Search</button>
-                        <a class="btn btn-light" href="{% url 'accounting:unit-list' %}" style="background-color: rgb(238, 238, 238);">Show all</a>
-                    </form>
-                </div>
-                <!-- End search -->
+                        <div class="form-group col-md-6">
+                            <label>Receive date</label>
+                            <input type="date" class="form-control" name="receive_date">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Created</label>
+                            <input type="date" class="form-control" name="created">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Categories</label>
+                        <select id="id_categories" class="form-control" name="categories" multiple>
+                            {% for category in categories %}
+                                <option>{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" id="id_income_button">Search</button>
+                    <a class="btn btn-light" href="{% url 'accounting:unit-list' %}?model=income" style="background-color: rgb(238, 238, 238);">Show all</a>
+                </form>
+            </div>
+            <!-- End income search -->
+
+            <!-- Expenses table  -->
+            <table id="id_expenses_table" class="table table-bordered table-hover">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'name' '-' %}" style="color: inherit;">Name
+                            <a href="?{% order_by request 'order_by' 'name' '-' 'expenses' %}" style="color: inherit;">Name
                                 <img src="{% get_arrow request 'name' %}">
                             </a>
                         </th>
-
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'quantity' '-' %}" style="color: inherit;">Quantity
+                            <a href="?{% order_by request 'order_by' 'quantity' '-' 'expenses' %}" style="color: inherit;">Quantity
                                 <img src="{% get_arrow request 'quantity' %}">
                             </a>
                         </th>
-
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'total_price' '-' %}" style="color: inherit;">Total price
+                            <a href="?{% order_by request 'order_by' 'total_price' '-' 'expenses' %}" style="color: inherit;">Total price
                                 <img src="{% get_arrow request 'total_price' %}">
                             </a>
                         </th>
-                        
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'income' '-' %}" style="color: inherit;">Income
-                                <img src="{% get_arrow request 'income' %}">
-                            </a>
-                        </th>
-
-                        <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'purchase_date' '-' %}" style="color: inherit;">Purchase date
+                            <a href="?{% order_by request 'order_by' 'purchase_date' '-' 'expenses' %}" style="color: inherit;">Purchase date
                                 <img src="{% get_arrow request 'purchase_date' %}">
                             </a>
                         </th>
-
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'receive_date' '-' %}" style="color: inherit;">Receive date
-                                <img src="{% get_arrow request 'receive_date' %}">
-                            </a>
-                        </th>
-                        
-                        <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'created' '-' %}" style="color: inherit;">Created
+                            <a href="?{% order_by request 'order_by' 'created' '-' 'expenses' %}" style="color: inherit;">Created
                                 <img src="{% get_arrow request 'created' %}">
                             </a>
                         </th>
-                    
                         <th scope="col">Categories</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for key, value in unit_list.items %}
-                        {% for unit in value %}
-                            <tr>
-                                <td>
-                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
-                                        {{ unit.name }}
+                    {% for unit in unit_list %}
+                        <tr>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {{ unit.name }}
+                                </a>
+                            </td>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {{ unit.quantity }}
+                                </a>
+                            </td>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {% if unit.total_price %}
+                                        ${{ unit.total_price }}
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {{ unit.purchase_date }}
+                                </a>
+                            </td>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {{ unit.created }}
+                                </a>
+                            </td>
+                            <td>
+                                {% for category in unit.categories.all %}
+                                    <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
+                                        <span class="badge badge-info">{{ category }}</span>
                                     </a>
-                                </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
-                                        {% if unit.price %}
-                                            ${{ unit.price }}
-                                        {% endif %}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
-                                        {% if unit.income %}
-                                            ${{ unit.income }}
-                                        {% endif %}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
-                                        {{ unit.purchase_date }}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
-                                        {{ unit.receive_date }}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a style="color: inherit;" href="{% get_unit_update_url unit %}">
-                                        {{ unit.created }}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    {% for category in unit.categories.all %}
-                                        <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
-                                            <span class="badge badge-info">{{ category }}</span>
-                                        </a>
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        {% endfor %}
+                                {% endfor %}
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            <!-- Expenses income -->
+
+            <!-- Income table  -->
+            <table id="id_income_table" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'name' '-' 'income' %}" style="color: inherit;">Name
+                                <img src="{% get_arrow request 'name' %}">
+                            </a>
+                        </th>
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'quantity' '-' 'income' %}" style="color: inherit;">Quantity
+                                <img src="{% get_arrow request 'quantity' %}">
+                            </a>
+                        </th>
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'total_income' '-' 'income' %}" style="color: inherit;">Income
+                                <img src="{% get_arrow request 'total_income' %}">
+                            </a>
+                        </th>
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'receive_date' '-' 'income' %}" style="color: inherit;">Receive date
+                                <img src="{% get_arrow request 'receive_date' %}">
+                            </a>
+                        </th>
+                        <th scope="col">
+                            <a href="?{% order_by request 'order_by' 'created' '-' 'income' %}" style="color: inherit;">Created
+                                <img src="{% get_arrow request 'created' %}">
+                            </a>
+                        </th>
+                        <th scope="col">Categories</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for unit in unit_list %}
+                        <tr>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {{ unit.name }}
+                                </a>
+                            </td>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {{ unit.quantity }}
+                                </a>
+                            </td>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {% if unit.total_income %}
+                                        ${{ unit.total_income }}
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {{ unit.receive_date }}
+                                </a>
+                            </td>
+                            <td>
+                                <a style="color: inherit;" href="{% get_unit_update_url unit %}">
+                                    {{ unit.created }}
+                                </a>
+                            </td>
+                            <td>
+                                {% for category in unit.categories.all %}
+                                    <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
+                                        <span class="badge badge-info">{{ category }}</span>
+                                    </a>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- End income table -->
+
         </div>
-        <!-- End table -->
+        <script>
+            var expenses_table = document.getElementById('id_expenses_table');
+            var income_table = document.getElementById('id_income_table');
+
+            var expenses_div = document.getElementById('id_expenses_div');
+            var income_div = document.getElementById('id_income_div');
+
+            var expenses_form = document.getElementById('id_expenses_form');
+            var income_form = document.getElementById('id_income_form');
+            
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+                });
+
+                let value = params.model;
+                if (value === 'expenses'){
+                    document.getElementById('id_expenses_link').classList.add('active');
+                    income_table.hidden = true;
+                    income_div.hidden = true;
+                };
+
+                if (value === 'income'){
+                    document.getElementById('id_income_link').classList.add('active');
+                    expenses_table.hidden = true;
+                    expenses_div.hidden = true;
+                };
+
+            document.getElementById('id_expenses_button').addEventListener('click', function(){
+                document.getElementById('id_expenses_form').submit();
+            });
+
+            document.getElementById('id_income_button').addEventListener('click', function(){
+                document.getElementById('id_income_form').submit();
+            });
+        </script>
         <link href="{% static 'select2-4.1.0-rc.0/css/select2.min.css' %}" rel="stylesheet"/>
         <script src="{% static 'select2-4.1.0-rc.0/js/select2.min.js' %}"></script>
         <script src="{% static 'js/select2-init.js' %}"></script>

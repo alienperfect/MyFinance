@@ -32,58 +32,35 @@ class RelatedCategoryMixin:
 
 class SingleObjectSearchMixin:
     """Mixin for searching and ordering on a model."""
+    model_dict: dict = None
     filters: dict = None
     ordering: str = None
 
     def get_queryset(self):
         request_data = self.request.GET
         values = {}
+        model = None
 
         for key in request_data:
             if not request_data[key]:
                 continue
-
-            if key.startswith('order_by'):
+            
+            if key.startswith('model'):
+                if self.model_dict:
+                    for k in self.model_dict:
+                        if request_data[key] in k:
+                            model = self.model_dict[k]
+            elif key.startswith('order_by'):
                 self.ordering = request_data[key]
             elif self.filters[key].endswith('__in'):
                 values[self.filters[key]] = request_data.getlist(key)
             else:
                 values[self.filters[key]] = request_data[key]
 
-        return self.model.objects.filter(**values).order_by(self.ordering).distinct()
-
-
-class MultipleObjectSearchMixin:
-    """Mixin for searching and ordering on multiple models."""
-    filters: dict = None
-    ordering: str = None
-    model_list: list = None
-
-    def get_queryset(self):
-        request_data = self.request.GET
-        values = {}
-        queryset = {}
-
-        for model in self.model_list:
-            for key in request_data:
-                if not request_data[key]:
-                    continue
-                
-                fields = [field.name for field in model._meta.get_fields()]
-
-                if key not in fields:
-                    if key.startswith('order_by') and request_data[key].replace('-', '') in fields:
-                        self.ordering = request_data[key]
-                    continue
-
-                elif self.filters[key].endswith('__in'):
-                    values[self.filters[key]] = request_data.getlist(key)
-                else:
-                    values[self.filters[key]] = request_data[key]
-
-            queryset[model.__name__] = model.objects.filter(**values).order_by(self.ordering).distinct()
-            values.clear()
-            self.ordering = '-created'
+        if model:
+            queryset = model.objects.filter(**values).order_by(self.ordering).distinct()
+        else:
+            queryset = self.model.objects.filter(**values).order_by(self.ordering).distinct()
 
         return queryset
 
@@ -92,28 +69,28 @@ class ExpensesUnitCreateView(RelatedCategoryMixin, CreateView):
     template_name = 'accounting/unit_create.html'
     model = ExpensesUnit
     form_class = ExpensesUnitForm
-    success_url = reverse_lazy('accounting:unit-list')
+    success_url = reverse_lazy('accounting:expenses-unit-list')
 
 
 class IncomeUnitCreateView(RelatedCategoryMixin, CreateView):
     template_name = 'accounting/unit_create.html'
     model = IncomeUnit
     form_class = IncomeUnitForm
-    success_url = reverse_lazy('accounting:unit-list')
+    success_url = reverse_lazy('accounting:income-unit-list')
 
 
 class ExpensesUnitUpdateView(RelatedCategoryMixin, UpdateView):
     template_name = 'accounting/unit_update.html'
     model = ExpensesUnit
     form_class = ExpensesUnitForm
-    success_url = reverse_lazy('accounting:unit-list')
+    success_url = reverse_lazy('accounting:expenses-unit-list')
 
 
 class IncomeUnitUpdateView(RelatedCategoryMixin, UpdateView):
     template_name = 'accounting/unit_update.html'
     model = IncomeUnit
     form_class = IncomeUnitForm
-    success_url = reverse_lazy('accounting:unit-list')
+    success_url = reverse_lazy('accounting:income-unit-list')
 
 
 class UnitListMixin:
@@ -121,6 +98,7 @@ class UnitListMixin:
 
     filters = {
         'name': 'name__icontains',
+        'quantity': 'quantity',
         'created': 'created__date',
         'categories': 'categories__name__in',
         'total_price': 'total_price',
@@ -138,9 +116,10 @@ class UnitListMixin:
         return context
 
 
-class UnitListView(UnitListMixin, MultipleObjectSearchMixin, ListView):
+class UnitListView(UnitListMixin, SingleObjectSearchMixin, ListView):
     template_name = 'accounting/unit_list.html'
-    model_list = [ExpensesUnit, IncomeUnit]
+    model = IncomeUnit
+    model_dict = {'expenses': ExpensesUnit, 'income': IncomeUnit}
     context_object_name = 'unit_list'
 
 
@@ -154,13 +133,8 @@ class IncomeUnitListView(UnitListMixin, SingleObjectSearchMixin, ListView):
     model = IncomeUnit
 
 
-class AccountingUnitDetailView(DetailView):
-    template_name = 'accounting/expenses_unit_detail.html'
-    model = ExpensesUnit
-
-
-class AccountingUnitDownloadView(ListView):
-    """View for downloading AccountingUnit data."""
+class AccountingDownloadView(ListView):
+    """View for downloading Accounting data."""
     def get(self, request, *args, **kwargs):
         func_name: str = f'dump_to_{kwargs.get("format", "xlsx")}'
         statistics_func: Callable[[HttpRequest], dict] = getattr(utils, func_name)

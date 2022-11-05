@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from accounting.views import (
     ExpensesUnitListView, ExpensesUnitCreateView, ExpensesUnitUpdateView,
     IncomeUnitCreateView, IncomeUnitUpdateView, IncomeUnitListView,
-    UnitListView, AccountingUnitDetailView, AccountingUnitDownloadView,
+    UnitListView, AccountingDownloadView,
     CategoryCreateView, CategoryUpdateView, CategoryListView, CategoryDetailView,
     )
 
@@ -20,8 +20,7 @@ urlpatterns = [
     path('income_new/', IncomeUnitCreateView.as_view(), name='income-unit-create'),
     path('income_edit/<int:pk>', IncomeUnitUpdateView.as_view(), name='income-unit-update'),
 
-    path('<int:pk>', AccountingUnitDetailView.as_view(), name='unit-detail'),
-    path('download/<str:format>', AccountingUnitDownloadView.as_view(), name='unit-download'),
+    path('download/<str:format>', AccountingDownloadView.as_view(), name='unit-download'),
 
     path('categories/', CategoryListView.as_view(), name='category-list'),
     path('category_new/', CategoryCreateView.as_view(), name='category-create'),

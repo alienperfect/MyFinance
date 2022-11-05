@@ -9,14 +9,18 @@ from django.templatetags.static import static
 register = template.Library()
 
 @register.simple_tag
-def order_by(request, field, value, direction=''):
+def order_by(request, field, value, direction='', model=None):
     request_copy = request.GET.copy()
 
     if field == 'order_by' and field in request_copy.keys():          
         if request_copy[field].startswith('-') and request_copy[field].lstrip('-') == value:
             request_copy[field] = value
         elif request_copy[field].lstrip('-') == value:
-            return ''
+            if model:
+                querystring = f'model={model}'
+            else:
+                querystring = ''
+            return querystring
         else:
             request_copy[field] = direction + value
     else:
