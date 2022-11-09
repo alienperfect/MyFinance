@@ -17,11 +17,8 @@ def is_ajax(request):
 def dump_to_xlsx(request: HttpRequest) -> dict:
     """Dump model's data to XLSX file."""
     model_dict = {'expenses': ExpensesUnit, 'income': IncomeUnit}
-
-    for key in model_dict:
-        if key in request.GET.get('model', ''):
-            model = model_dict[key]
-            file_name = key
+    model = model_dict[request.GET.get('model')]
+    file_name = request.GET.get('model')
 
     user_path = user_directory_path(request.user, 'file_name')
     full_path = os.path.join(settings.MEDIA_ROOT, user_path)
@@ -57,11 +54,8 @@ def dump_to_xlsx(request: HttpRequest) -> dict:
 def dump_to_csv(request: HttpRequest) -> dict:
     """Dump model's data to CSV file."""
     model_dict = {'expenses': ExpensesUnit, 'income': IncomeUnit}
-
-    for key in model_dict:
-        if key in request.GET.get('model', ''):
-            model = model_dict[key]
-            file_name = key
+    model = model_dict[request.GET.get('model')]
+    file_name = request.GET.get('model')
 
     user_path = user_directory_path(request.user, 'file_name')
     full_path = os.path.join(settings.MEDIA_ROOT, user_path)
