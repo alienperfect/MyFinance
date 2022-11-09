@@ -45,11 +45,8 @@ class SingleObjectSearchMixin:
             if not request_data[key]:
                 continue
             
-            if key.startswith('model'):
-                if self.model_dict:
-                    for k in self.model_dict:
-                        if request_data[key] in k:
-                            model = self.model_dict[k]
+            if key.startswith('model') and self.model_dict:
+                model = self.model_dict.get(request_data[key])
             elif key.startswith('order_by'):
                 self.ordering = request_data[key]
             elif self.filters[key].endswith('__in'):

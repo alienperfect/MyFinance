@@ -19,7 +19,7 @@ def dump_to_xlsx(request: HttpRequest) -> dict:
     model_dict = {'expenses': ExpensesUnit, 'income': IncomeUnit}
 
     for key in model_dict:
-        if request.GET.get('model', '') in key:
+        if key in request.GET.get('model', ''):
             model = model_dict[key]
             file_name = key
 
@@ -47,10 +47,11 @@ def dump_to_xlsx(request: HttpRequest) -> dict:
 
     workbook.close()
 
-    content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    content_disposition = f'attachment; filename="{file_name}.xlsx"'
-
-    return {'full_path': full_path, 'content_type': content_type, 'content_disposition': content_disposition}
+    return {
+        'full_path': full_path,
+        'content_type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'content_disposition': f'attachment; filename="{file_name}.xlsx"',
+        }
 
 
 def dump_to_csv(request: HttpRequest) -> dict:
@@ -58,7 +59,7 @@ def dump_to_csv(request: HttpRequest) -> dict:
     model_dict = {'expenses': ExpensesUnit, 'income': IncomeUnit}
 
     for key in model_dict:
-        if request.GET.get('model', '') in key:
+        if key in request.GET.get('model', ''):
             model = model_dict[key]
             file_name = key
 
@@ -79,7 +80,8 @@ def dump_to_csv(request: HttpRequest) -> dict:
                 row.append(instance[key])
             writer.writerow(*[row])
 
-    content_type = 'text/csv'
-    content_disposition = f'attachment; filename="{file_name}.csv"'
-
-    return {'full_path': full_path, 'content_type': content_type, 'content_disposition': content_disposition}
+    return {
+        'full_path': full_path,
+        'content_type': 'text/csv',
+        'content_disposition': f'attachment; filename="{file_name}.csv"',
+        }

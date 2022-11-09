@@ -58,7 +58,7 @@
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Search</button>
-                    <a class="btn btn-light" href="{% url 'accounting:expenses-unit-list' %}" style="background-color: rgb(238, 238, 238);">Show all</a>
+                    <a class="btn btn-light" href="{% url 'accounting:expenses-unit-list' %}">Show all</a>
                 </form>
             </div>
             <!-- End search -->
@@ -68,31 +68,31 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'name' '-' %}" style="color: inherit;">Name
+                            <a href="?{% order_by request 'order_by' 'name' '-' %}">Name
                                 <img src="{% get_arrow request 'name' %}">
                             </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'quantity' '-' %}" style="color: inherit;">Quantity
+                            <a href="?{% order_by request 'order_by' 'quantity' '-' %}">Quantity
                                 <img src="{% get_arrow request 'quantity' %}">
                             </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'total_price' '-' %}" style="color: inherit;">Price
+                            <a href="?{% order_by request 'order_by' 'total_price' '-' %}">Price
                                 <img src="{% get_arrow request 'total_price' %}">
                             </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'purchase_date' '-' %}" style="color: inherit;">Purchase date
+                            <a href="?{% order_by request 'order_by' 'purchase_date' '-' %}">Purchase date
                                 <img src="{% get_arrow request 'purchase_date' %}">
                             </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'created' '-' %}" style="color: inherit;">Created
+                            <a href="?{% order_by request 'order_by' 'created' '-' %}">Created
                                 <img src="{% get_arrow request 'created' %}">
                             </a>
                         </th>
@@ -104,33 +104,33 @@
                     {% for unit in expensesunit_list %}
                     <tr>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 {{ unit.name }}
                             </a>
                         </td>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 {{ unit.quantity }}
                             </a>
                         </td>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 ${{ unit.total_price }}
                             </a>
                         </td>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 {{ unit.purchase_date }}
                             </a>
                         </td>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 {{ unit.created }}
                             </a>
                         </td>
                         <td>
                             {% for category in unit.categories.all %}
-                                <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
+                                <a class="category" href="{% url 'accounting:category-detail' pk=category.pk %}">
                                     <span class="badge badge-info">{{ category }}</span>
                                 </a>
                             {% endfor %}
