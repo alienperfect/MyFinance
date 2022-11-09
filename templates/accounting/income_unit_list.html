@@ -6,88 +6,93 @@
 {% load static %}
 {% load table_sort %}
     <div class="container">
-        <!-- Table -->
+        
+        <!-- Top buttons -->
         <div class="py-3">
-            <table id="table" class="table table-bordered table-hover">
-                <div class="row">
-                    <h4 style="padding-left: 0.65em; margin-top: 7px;">Income</h4>
-                    <div class="col my-auto" style="padding-left: 0.5em;">
-                        <a href="{% url 'accounting:income-unit-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
-                            +
-                        </a>
-                    </div>
+            <div class="row">
+                <h4 style="padding-left: 0.65em; margin-top: 7px;">Income</h4>
+                <div class="col my-auto" style="padding-left: 0.5em;">
+                    <a href="{% url 'accounting:income-unit-create' %}" class="btn btn-primary btn-sm" style="width: 30px; height: 30px; outline: none; box-shadow: none;">
+                        +
+                    </a>
                     <div class="btn-group" style="padding-left: 0.5em;">
                         <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Export
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{% url 'accounting:unit-download' format='xlsx' %}">XLSX</a>
-                            <a class="dropdown-item" href="{% url 'accounting:unit-download' format='csv' %}">CSV</a>
+                            <a class="dropdown-item" href="{% url 'accounting:unit-download' format='xlsx' %}?model=income">XLSX</a>
+                            <a class="dropdown-item" href="{% url 'accounting:unit-download' format='csv' %}?model=income">CSV</a>
                         </div>
                     </div>
                 </div>
-                <!-- Search -->
-                <div class="container" style="padding: 0; padding-bottom: 1em;">
-                    <form id="id_search_form" method="get"">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label>Name</label>
-                                <input type="text" class="form-control" name="name">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Income</label>
-                                <input type="text" class="form-control" name="income" numval>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Receive date</label>
-                                <input type="date" class="form-control" name="receive_date">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Created</label>
-                                <input type="date" class="form-control" name="created">
-                            </div>
+            </div>
+            <!-- End top buttons -->
+
+            <!-- Search -->
+            <div class="container" style="padding: 0; padding-bottom: 1em;">
+                <form id="id_search_form" method="get"">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="name">
                         </div>
-                        <div class="form-group">
-                            <label>Categories</label>
-                            <select id="id_categories" class="form-control" name="categories" multiple>
-                                {% for category in categories %}
-                                    <option>{{ category }}</option>
-                                {% endfor %}
-                            </select>
+                        <div class="form-group col-md-6">
+                            <label>Income</label>
+                            <input type="text" class="form-control" name="total_income" numval>
                         </div>
-                        <button type="submit" class="btn btn-primary">Search</button>
-                        <a class="btn btn-light" href="{% url 'accounting:income-unit-list' %}" style="background-color: rgb(238, 238, 238);">Show all</a>
-                    </form>
-                </div>
-                <!-- End search -->
+                        <div class="form-group col-md-6">
+                            <label>Receive date</label>
+                            <input type="date" class="form-control" name="receive_date">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Created</label>
+                            <input type="date" class="form-control" name="created">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Categories</label>
+                        <select id="id_categories" class="form-control" name="categories" multiple>
+                            {% for category in categories %}
+                                <option>{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <a class="btn btn-light" href="{% url 'accounting:income-unit-list' %}">Show all</a>
+                </form>
+            </div>
+            <!-- End search -->
+
+            <!-- Table -->
+            <table id="table" class="table table-bordered table-hover">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'name' '-' %}" style="color: inherit;">Name
+                            <a href="?{% order_by request 'order_by' 'name' '-' %}">Name
                                 <img src="{% get_arrow request 'name' %}">
                             </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'quantity' '-' %}" style="color: inherit;">Quantity
+                            <a href="?{% order_by request 'order_by' 'quantity' '-' %}">Quantity
                                 <img src="{% get_arrow request 'quantity' %}">
                             </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'income' '-' %}" style="color: inherit;">Income
-                                <img src="{% get_arrow request 'income' %}">
+                            <a href="?{% order_by request 'order_by' 'total_income' '-' %}">Income
+                                <img src="{% get_arrow request 'total_income' %}">
                             </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'receive_date' '-' %}" style="color: inherit;">Receive date
+                            <a href="?{% order_by request 'order_by' 'receive_date' '-' %}">Receive date
                                 <img src="{% get_arrow request 'receive_date' %}">
                             </a>
                         </th>
 
                         <th scope="col">
-                            <a href="?{% order_by request 'order_by' 'created' '-' %}" style="color: inherit;">Created
+                            <a href="?{% order_by request 'order_by' 'created' '-' %}">Created
                                 <img src="{% get_arrow request 'created' %}">
                             </a>
                         </th>
@@ -99,33 +104,33 @@
                     {% for unit in incomeunit_list %}
                     <tr>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 {{ unit.name }}
                             </a>
                         </td>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 {{ unit.quantity }}
                             </a>
                         </td>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 ${{ unit.total_income }}
                             </a>
                         </td>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 {{ unit.receive_date }}
                             </a>
                         </td>
                         <td>
-                            <a style="color: inherit;" href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
                                 {{ unit.created }}
                             </a>
                         </td>
                         <td>
                             {% for category in unit.categories.all %}
-                                <a href="{% url 'accounting:category-detail' pk=category.pk %}" style="text-decoration: none;">
+                                <a class="category" href="{% url 'accounting:category-detail' pk=category.pk %}">
                                     <span class="badge badge-info">{{ category }}</span>
                                 </a>
                             {% endfor %}
@@ -136,6 +141,7 @@
             </table>
         </div>
         <!-- End table -->
+
         <link href="{% static 'select2-4.1.0-rc.0/css/select2.min.css' %}" rel="stylesheet"/>
         <script src="{% static 'select2-4.1.0-rc.0/js/select2.min.js' %}"></script>
         <script src="{% static 'js/select2-init.js' %}"></script>

@@ -1,0 +1,15 @@
+.btn-light {
+    background-color: rgb(238, 238, 238);
+}
+
+table a {
+    color: inherit;
+}
+
+table a:hover {
+    color: inherit;
+}
+
+.category:hover {
+    text-decoration: none;
+}

@@ -8,6 +8,7 @@
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap-4.0.0-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <script src="{% static 'js/jquery-3.6.1.min.js' %}"></script>
     <script src="{% static 'js/popper.min.js' %}"></script>
     <script src="{% static 'bootstrap-4.0.0-dist/js/bootstrap.min.js' %}"></script>
@@ -24,7 +25,7 @@
                 Accounting
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item dropright" href="{% url 'accounting:unit-list' %}">Accounting</a>
+                <a class="dropdown-item dropright" href="{% url 'accounting:unit-list' %}?model=expenses">Accounting</a>
                 <a class="dropdown-item dropright" href="{% url 'accounting:expenses-unit-list' %}">Expenses</a>
                 <a class="dropdown-item dropright" href="{% url 'accounting:income-unit-list' %}">Income</a>
                 <a class="dropdown-item" href="{% url 'accounting:category-list' %}">Categories</a>
