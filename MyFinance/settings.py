@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'accounting',
+    'site_statistics',
     'django_extensions',
     'bootstrap4',
 ]
