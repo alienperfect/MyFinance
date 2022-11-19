@@ -1,8 +1,4 @@
-import calendar
-
-from django.views.generic import TemplateView, ListView
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.views.generic import TemplateView
 
 from site_statistics.forms import StatisticsForm
 from site_statistics.utils import get_month_name, calculate_money, get_category_stats
