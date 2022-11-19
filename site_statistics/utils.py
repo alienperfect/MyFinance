@@ -63,5 +63,4 @@ def get_category_stats(date: datetime.date) -> dict:
                 round(expenses, 2) if expenses else None,
                 ]
 
-    print(cat_stats)
     return cat_stats
