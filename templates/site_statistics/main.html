@@ -13,7 +13,7 @@
                         <h4>
                             {% if month_year %}
                                 Statistics {{ month_year.0 }}, {{ month_year.1 }}
-                                <a class="btn btn-light" href="{% url 'site_statistics:main' %}">All time</a>
+                                <a class="btn btn-light" href="{% url 'statistics:main' %}">All time</a>
                             {% else %}
                                 Total statistics
                             {% endif %}
