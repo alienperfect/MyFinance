@@ -13,8 +13,8 @@
     <script src="{% static 'js/popper.min.js' %}"></script>
     <script src="{% static 'bootstrap-4.0.0-dist/js/bootstrap.min.js' %}"></script>
 </head>
-<body>
-    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+<body style="background-image: linear-gradient(#005BBB, #FFD500); background-repeat: no-repeat; min-height: 100vh;">
+    <nav class="navbar navbar-expand-sm navbar-light bg-custom">
         <div class="expand navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -54,8 +54,11 @@
           </ul>
         </div>
       </nav>
-
-    {% block content %}{% endblock %}
+    
+    <div>
+      {% block content %}{% endblock %}
+    </div>
+    
     
 </body>
 </html>
