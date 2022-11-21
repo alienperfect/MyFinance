@@ -40,7 +40,7 @@
             {% if user.is_authenticated %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ user.email }}
+                {% if user.avatar %}<img class="avatar navbar-left" src="{{ user.avatar.url }}">{% endif %}{{ user.email }}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="{% url 'accounts:account-detail' %}">Account</a>
