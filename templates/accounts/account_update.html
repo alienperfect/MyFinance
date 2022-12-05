@@ -21,17 +21,4 @@
 
     <script src="{% static 'js/validate-numeric.js' %}"></script>
     <script src="{% static 'js/account-update.js' %}"></script>
-    <script>
-        input_file = $('input[type=file]');
-        input_file.after('<img id="id_preview" width=250>');
-
-        input_file.change(function(){
-            var file = input_file.get(0).files[0];
-
-            if (file){
-                console.log("Y")
-                $('#id_preview').attr('src', URL.createObjectURL(file));
-            }   
-        })
-    </script>
 {% endblock %}
