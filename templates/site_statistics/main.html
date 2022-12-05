@@ -15,7 +15,7 @@
                                 Statistics {{ month_year.0 }}, {{ month_year.1 }}
                                 <a class="btn btn-light" href="{% url 'statistics:main' %}">All time</a>
                             {% else %}
-                                Total statistics
+                                All time statistics
                             {% endif %}
                         </h4>
                         <ul>
@@ -41,11 +41,15 @@
                     <div class="col-sm">
                         <h4>Categories</h4>
                         <ul>
-                            {% for key, val in category_stats.items %}
-                                <li>{{ key }}:
-                                    {% if val.0 %}+${{ val.0 }}{% else %}---{% endif %},
-                                    {% if val.1 %}-${{ val.1 }}{% else %}---{% endif %}</li>
-                            {% endfor %}
+                            {% for queryset in category_stats %}
+                                {% for category in queryset %}
+                                    <li>
+                                        {{ category.name|capfirst }}:
+                                        {% if category.income %}+${{ category.income|floatformat:2 }}{% else %}---{% endif %},
+                                        {% if category.expenses %}-${{ category.expenses|floatformat:2 }}{% else %}---{% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endfor %}    
                         </ul>
                     </div>
                 </div>

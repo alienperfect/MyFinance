@@ -1,31 +1,32 @@
 import datetime
 import calendar
 
-from django.db.models import Sum
+from django.db.models import Sum, Q
 
 from accounting.models import ExpensesUnit, IncomeUnit, Category
 
 
 def get_month_name(month: int) -> str:
+    """Get month name."""
     return calendar.month_name[month]
 
 
-def calculate_money(date: datetime.date) -> dict:
+def calculate_money(date: datetime.date = None) -> dict:
     """Calculate income and expenses."""
     money_dict = {}
 
     if date:
         income = IncomeUnit.objects.filter(
             receive_date__month=date.month, receive_date__year=date.year,
-            ).aggregate(Sum('income')).get('income__sum')
+            ).aggregate(income=Sum('income')).get('income')
 
         expenses = ExpensesUnit.objects.filter(
             purchase_date__month=date.month, purchase_date__year=date.year,
-            ).aggregate(Sum('price')).get('price__sum')
+            ).aggregate(price=Sum('price')).get('price')
     else:
-        income = IncomeUnit.objects.aggregate(Sum('income')).get('income__sum')
-        expenses = ExpensesUnit.objects.aggregate(Sum('price')).get('price__sum')
-        
+        income = IncomeUnit.objects.aggregate(income=Sum('income')).get('income')
+        expenses = ExpensesUnit.objects.aggregate(price=Sum('price')).get('price')
+
     money_dict['income'] = round(income, 2) if income else income
     money_dict['expenses'] = round(expenses, 2) if expenses else expenses
 
@@ -35,32 +36,20 @@ def calculate_money(date: datetime.date) -> dict:
     return money_dict
 
 
-def get_category_stats(date: datetime.date) -> dict:
-    cat_stats = {}
-    categories = Category.objects.all().prefetch_related('income_unit', 'expenses_unit')
-
+def get_category_stats(date: datetime.date = None) -> dict:
+    """Get category stats."""
+    category_stats = []
+ 
     if date:
-        for category in categories:
-            income = category.income_unit.filter(
-                receive_date__month=date.month, receive_date__year=date.year,
-                ).aggregate(Sum('income')).get('income__sum')
-
-            expenses = category.expenses_unit.filter(
-                purchase_date__month=date.month, purchase_date__year=date.year,
-                ).aggregate(Sum('price')).get('price__sum')
-
-            cat_stats[category.name] = [
-                round(income, 2) if income else None,
-                round(expenses, 2) if expenses else None,
-                ]
+        category_stats.append(
+            Category.objects.filter(
+                Q(income_unit__receive_date__month=date.month, income_unit__receive_date__year=date.year)
+                | Q(expenses_unit__purchase_date__month=date.month, expenses_unit__purchase_date__year=date.year)
+                ).annotate(income=Sum('income_unit__income'), expenses=Sum('expenses_unit__price'))
+            )
     else:
-        for category in categories:
-            income = category.income_unit.all().aggregate(Sum('income')).get('income__sum')
-            expenses = category.expenses_unit.all().aggregate(Sum('price')).get('price__sum')
+        category_stats.append(
+            Category.objects.annotate(income=Sum('income_unit__income'), expenses=Sum('expenses_unit__price'))
+        )
 
-            cat_stats[category.name] = [
-                round(income, 2) if income else None,
-                round(expenses, 2) if expenses else None,
-                ]
-
-    return cat_stats
+    return category_stats
