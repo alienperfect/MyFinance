@@ -31,4 +31,16 @@ $(document).ready(function(){
             $( "#id_hourly_rate" ).prop( "disabled", false );
         }
       });
+    
+    // Image preview
+    input_file = $('input[type=file]');
+    input_file.after('<img id="id_preview" width=250>');
+
+    input_file.change(function(){
+        var file = input_file.get(0).files[0];
+
+        if (file){
+            $('#id_preview').attr('src', URL.createObjectURL(file));
+        }   
+    });
 });
