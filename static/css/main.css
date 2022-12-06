@@ -19,3 +19,9 @@ table a:hover {
 .category:hover {
     text-decoration: none;
 }
+
+.avatar {
+    border-radius: 50%;
+    width: 2em;
+    margin-right: 0.5em;
+}
