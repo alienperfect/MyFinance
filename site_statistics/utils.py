@@ -1,7 +1,7 @@
 import datetime
 import calendar
 
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, QuerySet
 
 from accounting.models import ExpensesUnit, IncomeUnit, Category
 
@@ -36,20 +36,18 @@ def calculate_money(date: datetime.date = None) -> dict:
     return money_dict
 
 
-def get_category_stats(date: datetime.date = None) -> dict:
+def get_category_stats(date: datetime.date = None) -> QuerySet:
     """Get category stats."""
-    category_stats = []
- 
     if date:
-        category_stats.append(
-            Category.objects.filter(
-                Q(income_unit__receive_date__month=date.month, income_unit__receive_date__year=date.year)
-                | Q(expenses_unit__purchase_date__month=date.month, expenses_unit__purchase_date__year=date.year)
-                ).annotate(income=Sum('income_unit__income'), expenses=Sum('expenses_unit__price'))
+        category_stats = Category.objects.filter(
+            Q(income_unit__receive_date__month=date.month, income_unit__receive_date__year=date.year)
+            | Q(expenses_unit__purchase_date__month=date.month, expenses_unit__purchase_date__year=date.year)
+            ).annotate(income=Sum('income_unit__income'), expenses=Sum('expenses_unit__price')
             )
+
     else:
-        category_stats.append(
-            Category.objects.annotate(income=Sum('income_unit__income'), expenses=Sum('expenses_unit__price'))
-        )
+        category_stats = Category.objects.annotate(
+            income=Sum('income_unit__income'), expenses=Sum('expenses_unit__price')
+            )
 
     return category_stats

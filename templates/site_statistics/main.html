@@ -41,14 +41,12 @@
                     <div class="col-sm">
                         <h4>Categories</h4>
                         <ul>
-                            {% for queryset in category_stats %}
-                                {% for category in queryset %}
-                                    <li>
-                                        {{ category.name|capfirst }}:
-                                        {% if category.income %}+${{ category.income|floatformat:2 }}{% else %}---{% endif %},
-                                        {% if category.expenses %}-${{ category.expenses|floatformat:2 }}{% else %}---{% endif %}
-                                    </li>
-                                {% endfor %}
+                            {% for category in category_stats %}
+                                <li>
+                                    {{ category.name|capfirst }}:
+                                    {% if category.income %}+${{ category.income|floatformat:2 }}{% else %}---{% endif %},
+                                    {% if category.expenses %}-${{ category.expenses|floatformat:2 }}{% else %}---{% endif %}
+                                </li>
                             {% endfor %}    
                         </ul>
                     </div>
