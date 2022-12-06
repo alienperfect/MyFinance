@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+{% load bootstrap4 %}
+{% load static %}
+    <div class="container">
+        <div class="py-3">  
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <h4>
+                            {% if month_year %}
+                                Statistics {{ month_year.0 }}, {{ month_year.1 }}
+                                <a class="btn btn-light" href="{% url 'statistics:main' %}">All time</a>
+                            {% else %}
+                                All time statistics
+                            {% endif %}
+                        </h4>
+                        <ul>
+                            {% if money_dict.income %}<li>Income: ${{ money_dict.income }}</li>{% endif %}
+                            {% if money_dict.expenses %}<li>Expenses: ${{ money_dict.expenses }}</li>{% endif %}
+                            {% if money_dict.total %}<li>Money left ${{ money_dict.total }}</li>{% endif %}
+                        </ul>
+                    </div>
+                    <!--Search-->
+                    <div class="col-sm">
+                        <form method="get">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="month_year" placeholder="mm/yyyy">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--End search-->
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <h4>Categories</h4>
+                        <ul>
+                            {% for category in category_stats %}
+                                <li>
+                                    {{ category.name|capfirst }}:
+                                    {% if category.income %}+${{ category.income|floatformat:2 }}{% else %}---{% endif %},
+                                    {% if category.expenses %}-${{ category.expenses|floatformat:2 }}{% else %}---{% endif %}
+                                </li>
+                            {% endfor %}    
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
+    <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+    <script>
+        $('input').datepicker({
+            format: "mm/yyyy",
+            startView: 1,
+            minViewMode: 1
+        });
+    </script>
+{% endblock %}
