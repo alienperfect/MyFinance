@@ -25,3 +25,9 @@ class StatisticsViewTestCase(TestCase):
         self.assertEqual(type(resp.context.get('form', '')), type(StatisticsForm()))
         self.assertIn('money_dict', resp.context)
         self.assertIn('category_stats', resp.context)
+
+    def test_template_used(self):
+        self.client.force_login(self.user)
+        resp = self.client.get(reverse_lazy('statistics:main'))
+
+        self.assertTemplateUsed(resp, 'site_statistics/main.html')
