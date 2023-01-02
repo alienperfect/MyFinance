@@ -22,13 +22,6 @@ class RelatedCategoryMixin:
 
         return super().post(request, *args, **kwargs)
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        if not self.object and self.categories:
-            self.object.categories.add(*self.categories)
-
-        return response
-
 
 class SingleObjectSearchMixin:
     """Mixin for searching and ordering on a model."""
