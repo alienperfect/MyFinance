@@ -104,27 +104,27 @@
                     {% for unit in expensesunit_list %}
                     <tr>
                         <td>
-                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:expenses-unit-update' pk=unit.pk %}">
                                 {{ unit.name }}
                             </a>
                         </td>
                         <td>
-                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:expenses-unit-update' pk=unit.pk %}">
                                 {{ unit.quantity }}
                             </a>
                         </td>
                         <td>
-                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:expenses-unit-update' pk=unit.pk %}">
                                 ${{ unit.total_price }}
                             </a>
                         </td>
                         <td>
-                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:expenses-unit-update' pk=unit.pk %}">
                                 {{ unit.purchase_date }}
                             </a>
                         </td>
                         <td>
-                            <a href="{% url 'accounting:income-unit-update' pk=unit.pk %}">
+                            <a href="{% url 'accounting:expenses-unit-update' pk=unit.pk %}">
                                 {{ unit.created }}
                             </a>
                         </td>
